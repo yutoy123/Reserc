@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frameworks — Fieldnotes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body data-page="frameworks">
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="/" class="site-logo">Fieldnotes<span>Socio-environmental economics · LMICs</span></a>
+    <ul class="nav-links">
+      <li><a href="/" data-page="home">Home</a></li>
+      <li><a href="/explore.html" data-page="explore">Explore</a></li>
+      <li><a href="/investigate.html" data-page="investigate">Investigate</a></li>
+      <li><a href="/build.html" data-page="build">Build</a></li>
+      <li><a href="/frameworks.html" data-page="frameworks">Frameworks</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container">
+  <header class="page-header">
+    <p class="page-kicker">Framework library</p>
+    <h1 class="page-title">Economics frameworks for LMIC research</h1>
+    <p class="page-desc">Each framework includes what it is, how it's been applied in low- and middle-income contexts, key researchers, and when to use it.</p>
+  </header>
+
+  <div id="frameworkList"></div>
+</main>
+
+<footer class="site-footer">
+  <p>Have a topic? <a href="/build.html">Build mode</a> will match frameworks automatically.</p>
+</footer>
+
+<script type="module">
+import { esc } from "./js/common.js";
+
+async function loadFrameworks() {
+  const res = await fetch("/data/frameworks.json");
+  const data = await res.json();
+  const list = document.getElementById("frameworkList");
+
+  for (const branch of data.taxonomy) {
+    const section = document.createElement("section");
+    section.className = "taxonomy-branch";
+    section.innerHTML = `
+      <div class="taxonomy-label">${esc(branch.label)}</div>
+      <p class="taxonomy-desc">${esc(branch.description)}</p>
+    `;
+
+    for (const fwId of branch.frameworks) {
+      const fw = data.frameworks[fwId];
+      const el = document.createElement("article");
+      el.className = "framework-detail";
+      el.id = fw.id;
+      el.innerHTML = `
+        <h2>${esc(fw.name)}</h2>
+        <div class="detail-block">
+          <h3>What it is</h3>
+          <p>${esc(fw.summary)}</p>
+        </div>
+        <div class="detail-block">
+          <h3>Applied in LMICs</h3>
+          <p>${esc(fw.lmicApplication)}</p>
+        </div>
+        <div class="detail-block">
+          <h3>Use this framework when…</h3>
+          <p style="font-style:italic">${esc(fw.useWhen)}</p>
+        </div>
+        <div class="detail-block">
+          <h3>Key researchers</h3>
+          <p>${fw.keyResearchers.map(esc).join(" · ")}</p>
+        </div>
+        <div class="detail-block">
+          <h3>Key readings</h3>
+          <ul class="paper-list">
+            ${fw.keyPapers.map(p => `<li><em>${esc(p.title)}</em> — ${esc(p.authors)} (${esc(p.year)})</li>`).join("")}
+          </ul>
+        </div>
+        <p style="margin-top:12px">
+          <a href="/build.html?topic=${encodeURIComponent("research using " + fw.name)}" class="btn btn-forest" style="font-size:.65rem;padding:8px 16px">Try with Build mode →</a>
+        </p>
+        <hr style="border:none;border-top:1px solid var(--sand);margin:32px 0">
+      `;
+      section.appendChild(el);
+    }
+    list.appendChild(section);
+  }
+
+  if (location.hash) {
+    const target = document.querySelector(location.hash);
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+loadFrameworks();
+</script>
+<script type="module" src="/js/common.js"></script>
+</body>
+</html>

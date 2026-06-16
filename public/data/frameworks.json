@@ -1,0 +1,170 @@
+{
+  "taxonomy": [
+    {
+      "id": "core",
+      "label": "Core lens",
+      "description": "Always relevant when researching low- and middle-income countries.",
+      "frameworks": ["development-economics"]
+    },
+    {
+      "id": "social",
+      "label": "Social dimension",
+      "description": "How people, institutions, and communities shape economic outcomes.",
+      "frameworks": ["behavioral-economics", "institutional-economics", "social-economics"]
+    },
+    {
+      "id": "environmental",
+      "label": "Environmental dimension",
+      "description": "Natural systems, externalities, and sustainability in economic analysis.",
+      "frameworks": ["ecological-economics", "environmental-economics", "green-economics"]
+    },
+    {
+      "id": "systems",
+      "label": "Systems dimension",
+      "description": "How economies are organized — and what most LMICs actually operate under.",
+      "frameworks": ["market-economy", "command-economy", "mixed-economy"]
+    }
+  ],
+  "frameworks": {
+    "development-economics": {
+      "id": "development-economics",
+      "name": "Development Economics",
+      "dimension": "core",
+      "summary": "Studies why some countries remain poor, how growth reduces poverty, and which policies accelerate structural transformation in LMICs.",
+      "useWhen": "Your topic involves poverty, growth, aid, industrialization, structural change, or comparing outcomes across low-income contexts.",
+      "lmicApplication": "Used to analyze microfinance expansion in Bangladesh, export-led growth in Vietnam, and the middle-income trap in Latin America. Frameworks like Lewis's dual-sector model and endogenous growth theory are routinely applied to African urbanization and Asian manufacturing.",
+      "keyResearchers": ["Amartya Sen", "Dani Rodrik", "Esther Duflo", "Abhijit Banerjee", "Justin Yifu Lin"],
+      "keyPapers": [
+        { "title": "Poor Economics", "authors": "Banerjee & Duflo", "year": 2011 },
+        { "title": "The Economics of Growth", "authors": "Aghion & Howitt", "year": 2009 }
+      ],
+      "keywords": ["poverty", "growth", "development", "aid", "industrialization", "lmic", "low income", "middle income", "structural", "urbanization", "rural", "agriculture", "informal sector", "microfinance", "financial inclusion"]
+    },
+    "behavioral-economics": {
+      "id": "behavioral-economics",
+      "name": "Behavioral Economics",
+      "dimension": "social",
+      "summary": "Explains economic choices using psychology — biases, heuristics, social norms, and present bias rather than purely rational optimization.",
+      "useWhen": "Your topic involves why people make seemingly irrational choices: savings, health, education, adoption of technology, or responses to policy nudges.",
+      "lmicApplication": "ROSCAs and informal savings groups in Uganda persist because of trust and social enforcement, not bank interest rates. M-Pesa adoption in Kenya was driven by remittance habits and agent networks. Nudge trials on fertilizer use in Kenya and tax compliance in Rwanda show how small framing changes alter behavior.",
+      "keyResearchers": ["Richard Thaler", "Daniel Kahneman", "Sendhil Mullainathan", "Eldar Shafir"],
+      "keyPapers": [
+        { "title": "Nudge", "authors": "Thaler & Sunstein", "year": 2008 },
+        { "title": "Scarcity", "authors": "Mullainathan & Shafir", "year": 2013 }
+      ],
+      "keywords": ["behavior", "nudge", "savings", "rosca", "trust", "bias", "choice", "adoption", "mobile money", "remittance", "psychology", "heuristic", "present bias", "informal savings", "decision"]
+    },
+    "institutional-economics": {
+      "id": "institutional-economics",
+      "name": "Institutional Economics",
+      "dimension": "social",
+      "summary": "Focuses on formal and informal rules — property rights, governance, contracts, and social norms — that shape economic performance.",
+      "useWhen": "Your topic involves corruption, land tenure, contract enforcement, state capacity, or why identical policies produce different outcomes across countries.",
+      "lmicApplication": "Land titling programs in Peru increased investment; weak contract enforcement limits SME growth in Nigeria. Customary land rights in Ghana create different incentives than freehold systems. IMF governance indicators are frequently paired with this lens in cross-country LMIC studies.",
+      "keyResearchers": ["Douglass North", "Elinor Ostrom", "Daron Acemoglu", "James Robinson"],
+      "keyPapers": [
+        { "title": "Why Nations Fail", "authors": "Acemoglu & Robinson", "year": 2012 },
+        { "title": "Governing the Commons", "authors": "Ostrom", "year": 1990 }
+      ],
+      "keywords": ["institution", "governance", "property rights", "land tenure", "corruption", "state capacity", "contract", "rule of law", "customary", "enforcement", "regulation", "bureaucracy"]
+    },
+    "social-economics": {
+      "id": "social-economics",
+      "name": "Social Economics",
+      "dimension": "social",
+      "summary": "Examines how social structures — inequality, gender, ethnicity, community networks — interact with markets and welfare outcomes.",
+      "useWhen": "Your topic involves inequality, social protection, community welfare, gender gaps, or how social identity shapes economic access.",
+      "lmicApplication": "Conditional cash transfers (Bolsa Família, PROGRESA) are analyzed through welfare and equity lenses. Gender gaps in agricultural productivity in Sub-Saharan Africa link social norms to GDP losses. Community health worker programs blend social capital with service delivery.",
+      "keyResearchers": ["Amartya Sen", "Anthony Atkinson", "Nancy Folbre"],
+      "keyPapers": [
+        { "title": "Development as Freedom", "authors": "Sen", "year": 1999 },
+        { "title": "Inequality: What Can Be Done?", "authors": "Atkinson", "year": 2015 }
+      ],
+      "keywords": ["inequality", "welfare", "social protection", "gender", "community", "cash transfer", "poverty trap", "equity", "discrimination", "social capital", "household"]
+    },
+    "ecological-economics": {
+      "id": "ecological-economics",
+      "name": "Ecological Economics",
+      "dimension": "environmental",
+      "summary": "Treats the economy as embedded within ecological systems, emphasizing planetary boundaries, natural capital, and limits to growth.",
+      "useWhen": "Your topic connects economic activity to ecosystem limits, natural resource depletion, or long-run sustainability trade-offs.",
+      "lmicApplication": "Deforestation-linked agriculture in the Amazon and Congo basins is studied as economy-ecology feedback loops. Small island developing states use this lens for climate vulnerability. Natural capital accounting pilots in Botswana and Rwanda apply ecological frameworks to policy.",
+      "keyResearchers": ["Herman Daly", "Robert Costanza", "Kate Raworth"],
+      "keyPapers": [
+        { "title": "Doughnut Economics", "authors": "Raworth", "year": 2017 },
+        { "title": "Steady-State Economics", "authors": "Daly", "year": 1977 }
+      ],
+      "keywords": ["ecological", "natural capital", "planetary boundaries", "sustainability", "deforestation", "ecosystem", "resource depletion", "climate vulnerability", "doughnut", "carrying capacity"]
+    },
+    "environmental-economics": {
+      "id": "environmental-economics",
+      "name": "Environmental Economics",
+      "dimension": "environmental",
+      "summary": "Applies economic tools — externalities, valuation, market instruments — to environmental problems while largely working within neoclassical frameworks.",
+      "useWhen": "Your topic involves pollution, carbon pricing, environmental regulation, cost-benefit analysis of conservation, or market-based environmental policy.",
+      "lmicApplication": "Payments for ecosystem services in Costa Rica and Mexico. Carbon credit schemes in East Africa. Air pollution externalities in Indian cities. Water pricing and irrigation subsidies analyzed through externality frameworks in South Asia.",
+      "keyResearchers": ["William Nordhaus", "Elinor Ostrom", "Partha Dasgupta"],
+      "keyPapers": [
+        { "title": "The Economics of Biodiversity: The Dasgupta Review", "authors": "Dasgupta", "year": 2021 },
+        { "title": "Environmental and Natural Resource Economics", "authors": "Tietenberg & Lewis", "year": 2018 }
+      ],
+      "keywords": ["pollution", "externality", "carbon", "environmental", "conservation", "water", "air quality", "payments for ecosystem", "valuation", "emissions", "regulation", "climate policy"]
+    },
+    "green-economics": {
+      "id": "green-economics",
+      "name": "Green Economics",
+      "dimension": "environmental",
+      "summary": "Proposes alternative growth models that prioritize environmental sustainability, social justice, and long-term wellbeing over GDP alone.",
+      "useWhen": "Your topic questions whether conventional growth paths are viable for LMICs, or explores green jobs, renewable transitions, and alternative development models.",
+      "lmicApplication": "Rwanda's green growth strategy and Ethiopia's climate-resilient agriculture plans. Debates over leapfrogging fossil fuels in Sub-Saharan Africa. UN Green Economy Initiative case studies in Kenya and Senegal.",
+      "keyResearchers": ["Kate Raworth", "Tim Jackson", "Molly Scott Cato"],
+      "keyPapers": [
+        { "title": "Prosperity Without Growth", "authors": "Jackson", "year": 2009 },
+        { "title": "Green Economics", "authors": "Scott Cato", "year": 2009 }
+      ],
+      "keywords": ["green growth", "renewable", "sustainable development", "green jobs", "leapfrog", "alternative growth", "climate resilient", "circular economy", "just transition"]
+    },
+    "market-economy": {
+      "id": "market-economy",
+      "name": "Market Economy Theory",
+      "dimension": "systems",
+      "summary": "Analyzes how price signals, competition, and supply-demand dynamics allocate resources — and where markets fail.",
+      "useWhen": "Your topic involves pricing, competition, trade liberalization, private sector dynamics, or market failures requiring intervention.",
+      "lmicApplication": "Agricultural commodity price transmission from global markets to local vendors. Trade openness debates in Ghana and Vietnam. Mobile money as a market innovation disrupting traditional banking. Informal markets as price-discovery mechanisms.",
+      "keyResearchers": ["Adam Smith", "Milton Friedman", "Paul Samuelson"],
+      "keyPapers": [
+        { "title": "The Wealth of Nations", "authors": "Smith", "year": 1776 },
+        { "title": "Economics", "authors": "Samuelson & Nordhaus", "year": 2010 }
+      ],
+      "keywords": ["market", "price", "competition", "trade", "supply", "demand", "liberalization", "private sector", "commodity", "inflation", "market failure"]
+    },
+    "command-economy": {
+      "id": "command-economy",
+      "name": "Command Economy Theory",
+      "dimension": "systems",
+      "summary": "Studies centralized state planning, allocation by government directive, and the efficiency costs of replacing price signals with administrative control.",
+      "useWhen": "Your topic involves state planning, subsidies, price controls, nationalized industries, or heavy government direction of economic activity.",
+      "lmicApplication": "Ethiopia's state-led industrial parks. Fuel subsidies in Nigeria and Egypt. India's historical license raj compared to liberalization outcomes. Cuban and Vietnamese transitions from command toward mixed models.",
+      "keyResearchers": ["Ludwig von Mises", "Friedrich Hayek", "Joseph Stiglitz"],
+      "keyPapers": [
+        { "title": "The Road to Serfdom", "authors": "Hayek", "year": 1944 },
+        { "title": "Whither Socialism?", "authors": "Stiglitz", "year": 1994 }
+      ],
+      "keywords": ["planning", "state", "subsidy", "price control", "nationalized", "central planning", "government allocation", "industrial policy", "state-led"]
+    },
+    "mixed-economy": {
+      "id": "mixed-economy",
+      "name": "Mixed Economy Models",
+      "dimension": "systems",
+      "summary": "Describes economies combining market mechanisms with state intervention — the model most LMICs actually operate under.",
+      "useWhen": "Your topic involves public-private partnerships, industrial policy, social safety nets alongside markets, or the interaction of state and private sectors.",
+      "lmicApplication": "Brazil's Bolsa Família alongside agribusiness markets. China's special economic zones. India's mix of digital public infrastructure (UPI) and private fintech. Most African economies blend informal markets, state utilities, and donor-funded programs.",
+      "keyResearchers": ["John Maynard Keynes", "Dani Rodrik", "Mariana Mazzucato"],
+      "keyPapers": [
+        { "title": "The Entrepreneurial State", "authors": "Mazzucato", "year": 2013 },
+        { "title": "One Economics, Many Recipes", "authors": "Rodrik", "year": 2007 }
+      ],
+      "keywords": ["mixed", "public-private", "ppp", "industrial policy", "safety net", "state intervention", "informal", "hybrid", "developmental state"]
+    }
+  }
+}

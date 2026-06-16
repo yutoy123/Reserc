@@ -1,0 +1,9 @@
+{
+  "name": "research-aggregator",
+  "version": "1.0.0",
+  "description": "Layer 1 — Development economics research aggregator for LMICs",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

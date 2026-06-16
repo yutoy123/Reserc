@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build — Fieldnotes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body data-page="build">
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="/" class="site-logo">Fieldnotes<span>Socio-environmental economics · LMICs</span></a>
+    <ul class="nav-links">
+      <li><a href="/" data-page="home">Home</a></li>
+      <li><a href="/explore.html" data-page="explore">Explore</a></li>
+      <li><a href="/investigate.html" data-page="investigate">Investigate</a></li>
+      <li><a href="/build.html" data-page="build">Build</a></li>
+      <li><a href="/frameworks.html" data-page="frameworks">Frameworks</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container">
+  <header class="page-header">
+    <p class="page-kicker">Mode 3 · Build · Layer 3</p>
+    <h1 class="page-title">Build your research argument</h1>
+    <p class="page-desc">You have a topic and rough idea. We'll surface relevant economic frameworks, show how they've been applied in LMICs, and scaffold your move from data to hypothesis.</p>
+  </header>
+
+  <form class="search-form single" id="buildForm">
+    <div class="field">
+      <label for="topic">Your research topic</label>
+      <input type="text" id="topic" name="topic" placeholder="e.g. informal savings groups in rural Uganda" required>
+    </div>
+    <button type="submit" class="btn btn-forest" id="buildBtn">Build scaffold</button>
+  </form>
+
+  <div class="field" style="margin-top:12px">
+    <label for="region">Region (optional)</label>
+    <select id="region">
+      <option value="">Any / not specified</option>
+      <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+      <option value="South Asia">South Asia</option>
+      <option value="East Asia and Pacific">East Asia and Pacific</option>
+      <option value="Latin America and Caribbean">Latin America and Caribbean</option>
+      <option value="Middle East and North Africa">Middle East and North Africa</option>
+      <option value="Europe and Central Asia">Europe and Central Asia</option>
+    </select>
+  </div>
+
+  <div class="status-bar" id="statusBar"></div>
+  <article class="report" id="buildReport"></article>
+</main>
+
+<footer class="site-footer">
+  <p>Need data first? Start with <a href="/investigate.html">Investigate</a> or browse the <a href="/frameworks.html">framework library</a>.</p>
+</footer>
+
+<script type="module" src="/js/build.js"></script>
+<script type="module" src="/js/common.js"></script>
+</body>
+</html>

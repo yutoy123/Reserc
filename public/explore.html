@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore — Fieldnotes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body data-page="explore">
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="/" class="site-logo">Fieldnotes<span>Socio-environmental economics · LMICs</span></a>
+    <ul class="nav-links">
+      <li><a href="/" data-page="home">Home</a></li>
+      <li><a href="/explore.html" data-page="explore">Explore</a></li>
+      <li><a href="/investigate.html" data-page="investigate">Investigate</a></li>
+      <li><a href="/build.html" data-page="build">Build</a></li>
+      <li><a href="/frameworks.html" data-page="frameworks">Frameworks</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container-wide">
+  <header class="page-header">
+    <p class="page-kicker">Mode 1 · Explore · Layer 2</p>
+    <h1 class="page-title">Explore the landscape</h1>
+    <p class="page-desc">Browse live World Bank data for LIC and LMC countries in your region. Indicators are matched to your topic automatically.</p>
+  </header>
+
+  <form class="search-form" id="exploreForm" style="max-width:700px;margin-bottom:32px">
+    <div class="field">
+      <label for="interest">Area of interest</label>
+      <input type="text" id="interest" placeholder="e.g. environmental economics in Sub-Saharan Africa" required>
+    </div>
+    <div class="field">
+      <label for="exploreRegion">Region</label>
+      <select id="exploreRegion" required>
+        <option value="">Select a region…</option>
+        <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+        <option value="South Asia">South Asia</option>
+        <option value="East Asia and Pacific">East Asia and Pacific</option>
+        <option value="Latin America and Caribbean">Latin America and Caribbean</option>
+        <option value="Middle East and North Africa">Middle East and North Africa</option>
+        <option value="Europe and Central Asia">Europe and Central Asia</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-forest">Load data</button>
+  </form>
+
+  <div class="status-bar" id="exploreStatus"></div>
+
+  <div id="exploreOutput" class="explore-output" style="display:none"></div>
+
+  <section class="section" style="margin-top:40px;padding-top:24px;border-top:1px solid var(--rule)">
+    <h3 class="section-heading">Found something interesting?</h3>
+    <p style="margin-bottom:16px;color:var(--ink-soft)">Move to Investigate for a full brief, or Build to structure your argument.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="/investigate.html" class="btn btn-forest" id="toInvestigate">Investigate this topic →</a>
+      <a href="/build.html" class="btn btn-secondary" style="color:var(--ink);border-color:var(--rule)" id="toBuild">Build an argument →</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>Data sourced live from the World Bank API · filtered to low-income (LIC) and lower-middle-income (LMC) countries.</p>
+</footer>
+
+<script type="module">
+import { initExplore } from "/js/explore.js";
+initExplore();
+</script>
+<script type="module" src="/js/common.js"></script>
+</body>
+</html>

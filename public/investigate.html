@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investigate — Fieldnotes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body data-page="investigate">
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="/" class="site-logo">Fieldnotes<span>Socio-environmental economics · LMICs</span></a>
+    <ul class="nav-links">
+      <li><a href="/" data-page="home">Home</a></li>
+      <li><a href="/explore.html" data-page="explore">Explore</a></li>
+      <li><a href="/investigate.html" data-page="investigate">Investigate</a></li>
+      <li><a href="/build.html" data-page="build">Build</a></li>
+      <li><a href="/frameworks.html" data-page="frameworks">Frameworks</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container">
+  <header class="page-header">
+    <p class="page-kicker">Mode 2 · Investigate · Layer 1</p>
+    <h1 class="page-title">Investigate your topic</h1>
+    <p class="page-desc">You have a research question and a region. We'll pull World Bank data, policy context, research gaps, and sources into one structured brief.</p>
+  </header>
+
+  <form class="search-form" id="searchForm">
+    <div class="field">
+      <label for="topic">Research Topic</label>
+      <input type="text" id="topic" name="topic" placeholder="e.g. food inflation in Sub-Saharan Africa" required>
+    </div>
+    <div class="field">
+      <label for="region">Region</label>
+      <select id="region" name="region" required>
+        <option value="">Select a region…</option>
+        <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+        <option value="South Asia">South Asia</option>
+        <option value="East Asia and Pacific">East Asia and Pacific</option>
+        <option value="Latin America and Caribbean">Latin America and Caribbean</option>
+        <option value="Middle East and North Africa">Middle East and North Africa</option>
+        <option value="Europe and Central Asia">Europe and Central Asia</option>
+        <option value="Low Income">Low Income</option>
+        <option value="Lower Middle Income">Lower Middle Income</option>
+        <option value="Upper Middle Income">Upper Middle Income</option>
+        <option value="World">World</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-forest" id="searchBtn">Generate Report</button>
+  </form>
+
+  <div class="status-bar" id="statusBar"></div>
+  <article class="report" id="report"></article>
+</main>
+
+<footer class="site-footer">
+  <p>After your brief, use <a href="/build.html">Build mode</a> to connect frameworks and structure your argument.</p>
+</footer>
+
+<script type="module" src="/js/investigate-page.js"></script>
+<script type="module" src="/js/common.js"></script>
+</body>
+</html>

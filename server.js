@@ -201,6 +201,6 @@ const server = http.createServer(async (req, res) => {
   res.end("Method not allowed");
 });
 
-server.listen(PORT, () => {
-  console.log(`Fieldnotes running at http://localhost:${PORT}`);
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Fieldnotes running at http://0.0.0.0:${PORT}`);
 });

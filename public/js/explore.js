@@ -6,7 +6,7 @@ function renderStatCards(indicators) {
       return `
         <div class="explore-stat-card explore-stat-empty">
           <div class="metric-label">${esc(ind.label)}</div>
-          <p class="no-data-msg">${esc(ind.noDataMessage)}</p>
+          <p class="no-data-neutral">Limited regional data — view by country in Investigate</p>
         </div>`;
     }
     return `
@@ -21,8 +21,8 @@ function renderStatCards(indicators) {
 }
 
 function renderBarChart(chart) {
-  if (!chart?.countries?.length) {
-    return `<p class="no-data-msg">No data available for this region</p>`;
+  if (!chart?.countries?.length || chart.countries.length < 4) {
+    return `<p class="no-data-neutral">Insufficient country-level data for this region (${chart?.countries?.length || 0} countries reported). This indicator has limited coverage among LIC/LMC countries here.</p>`;
   }
   const max = Math.max(...chart.countries.map((c) => c.value));
   return `
@@ -42,22 +42,19 @@ function renderBarChart(chart) {
 }
 
 function renderLineChart(chart) {
-  if (!chart?.countries?.length) {
-    return `<p class="no-data-msg">No data available for this region</p>`;
+  if (!chart?.countries?.length || chart.countries.length < 3) {
+    return `<p class="no-data-neutral">Insufficient country-level data for this region (${chart?.countries?.length || 0} countries reported). This indicator has limited coverage among LIC/LMC countries here.</p>`;
   }
   const sorted = [...chart.countries].sort((a, b) => a.value - b.value);
   const min = sorted[0].value;
   const max = sorted[sorted.length - 1].value;
   const range = max - min || 1;
-  const w = 400;
-  const h = 120;
-  const pad = 20;
+  const w = 400, h = 120, pad = 20;
   const points = sorted.map((c, i) => {
     const x = pad + (i / (sorted.length - 1 || 1)) * (w - pad * 2);
     const y = h - pad - ((c.value - min) / range) * (h - pad * 2);
     return `${x},${y}`;
   }).join(" ");
-
   return `
     <div class="line-chart-wrap">
       <svg viewBox="0 0 ${w} ${h}" class="line-chart" aria-hidden="true">
@@ -70,14 +67,14 @@ function renderLineChart(chart) {
       </svg>
       <div class="line-chart-labels">
         <span>${esc(sorted[0].name)} (${esc(sorted[0].displayValue)})</span>
-        <span>${esc(sorted[sorted.length - 1].name)} (${esc(sorted[sorted.length - 1].displayValue)})</span>
+        <span>${esc(sorted[sorted.length-1].name)} (${esc(sorted[sorted.length-1].displayValue)})</span>
       </div>
     </div>`;
 }
 
 function renderCharts(charts) {
   if (!charts?.length) {
-    return `<p class="no-data-msg">No data available for this region — none of the selected indicators returned values for LIC/LMC countries here.</p>`;
+    return `<p class="no-data-neutral">No chart data available for this region — none of the selected indicators returned enough values for LIC/LMC countries here. Try Investigate for a full AI-generated brief.</p>`;
   }
   return charts.map((chart) => `
     <div class="chart-panel explore-chart-block">
@@ -97,14 +94,11 @@ function renderExploreOutput(data) {
       <span class="explore-tag">${esc(data.category)} indicators</span>
       <span class="explore-tag">${data.lmicCountryCount} LIC/LMC countries in ${esc(data.region)}</span>
     </div>
-
     ${renderStatCards(data.indicators)}
-
     <div class="explore-charts-section">
       <h3 class="section-heading">Country comparisons</h3>
       <div class="explore-charts-grid">${renderCharts(data.charts)}</div>
     </div>
-
     <div class="explore-summary-section">
       <h3 class="section-heading">What these numbers mean</h3>
       <p class="explore-summary">${esc(data.summary)}</p>
@@ -135,21 +129,17 @@ export function initExplore() {
         body: JSON.stringify({ interest, region }),
       });
       const json = await res.json();
-
       if (json.rawApiResponses) {
         console.log("[Explore] Raw World Bank API responses:", json.rawApiResponses);
       }
-
       if (!json.success) {
         statusBar.className = "status-bar error";
         statusBar.textContent = json.error;
         return;
       }
-
       statusBar.textContent = `Live data · ${json.region} · ${json.indicators.filter(i => i.hasData).length}/${json.indicators.length} indicators`;
       output.innerHTML = renderExploreOutput(json);
       output.style.display = "block";
-
       const q = `?topic=${encodeURIComponent(interest)}&region=${encodeURIComponent(region)}`;
       toInvestigate.href = `/investigate.html${q}`;
       toBuild.href = `/build.html?topic=${encodeURIComponent(interest)}&region=${encodeURIComponent(region)}`;

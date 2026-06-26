@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — Reserc</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+
+html, body { height: 100%; }
+
+body {
+  background: var(--warm-dark);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── SPLIT LAYOUT ── */
+.auth-page {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+@media(max-width: 860px) {
+  .auth-page { grid-template-columns: 1fr; }
+  .auth-visual { display: none; }
+}
+
+/* LEFT: Visual panel */
+.auth-visual {
+  position: relative;
+  overflow: hidden;
+  background: var(--warm-dark);
+}
+.auth-visual-photo {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1200&q=80&fit=crop') center/cover no-repeat;
+  transition: transform 8s ease;
+}
+.auth-visual:hover .auth-visual-photo { transform: scale(1.04); }
+.auth-visual-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(20,10,4,.75) 0%, rgba(139,58,26,.5) 100%);
+}
+.auth-visual-content {
+  position: relative; z-index: 2;
+  padding: 64px 56px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.auth-visual-logo {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--cream);
+  text-decoration: none;
+  letter-spacing: .02em;
+  margin-bottom: auto;
+}
+.auth-visual-logo span {
+  font-family: var(--mono);
+  font-size: .5rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  display: block;
+  color: var(--ochre-pale);
+  font-weight: 400;
+  margin-top: 2px;
+}
+.auth-visual-quote {
+  margin-top: auto;
+}
+.auth-visual-quote blockquote {
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.auth-visual-quote blockquote em {
+  color: var(--ochre-pale);
+  font-style: italic;
+}
+.auth-visual-caption {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(250,246,240,.4);
+}
+
+/* RIGHT: Form panel */
+.auth-form-panel {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 48px;
+  min-height: 100vh;
+}
+@media(max-width: 500px) {
+  .auth-form-panel { padding: 48px 24px; }
+}
+
+.auth-form-inner {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeUp .7s cubic-bezier(.16,1,.3,1) .1s both;
+}
+
+/* Mobile logo (shown only when visual panel hidden) */
+.auth-mobile-logo {
+  display: none;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  margin-bottom: 40px;
+}
+@media(max-width: 860px) { .auth-mobile-logo { display: block; } }
+
+/* Tab switcher */
+.auth-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--sand);
+  margin-bottom: 36px;
+}
+.auth-tab {
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 10px 0;
+  margin-right: 28px;
+  color: var(--ink-faint);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color .2s, border-color .2s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.auth-tab.active {
+  color: var(--clay);
+  border-bottom-color: var(--clay);
+}
+
+/* Form heading */
+.auth-heading {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.auth-sub {
+  font-size: .92rem;
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+/* Form fields */
+.auth-field {
+  margin-bottom: 20px;
+}
+.auth-field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.auth-field input {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--body);
+  font-size: 1rem;
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: var(--ink);
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+}
+.auth-field input:focus {
+  border-color: var(--ochre);
+  box-shadow: 0 0 0 3px rgba(184,122,26,.12);
+}
+.auth-field input::placeholder { color: var(--ink-faint); }
+
+/* Password row with toggle */
+.pw-row {
+  position: relative;
+}
+.pw-toggle {
+  position: absolute;
+  right: 12px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  cursor: pointer;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 4px;
+  transition: color .2s;
+}
+.pw-toggle:hover { color: var(--clay); }
+
+.auth-forgot {
+  display: block;
+  text-align: right;
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .08em;
+  color: var(--ink-faint);
+  text-decoration: none;
+  margin-top: -12px;
+  margin-bottom: 24px;
+  transition: color .2s;
+}
+.auth-forgot:hover { color: var(--clay); }
+
+/* Submit button */
+.auth-submit {
+  width: 100%;
+  padding: 14px;
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  background: var(--clay);
+  color: var(--cream);
+  border: none;
+  cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .2s;
+  margin-bottom: 20px;
+}
+.auth-submit:hover {
+  background: var(--terracotta);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(139,58,26,.3);
+}
+.auth-submit:active { transform: translateY(0); }
+
+/* Divider */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--sand);
+}
+
+/* Switch link */
+.auth-switch {
+  text-align: center;
+  font-size: .88rem;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+.auth-switch a {
+  color: var(--clay);
+  text-decoration: none;
+  font-weight: 500;
+}
+.auth-switch a:hover { text-decoration: underline; }
+
+/* Panel visibility */
+.auth-panel { display: none; }
+.auth-panel.active { display: block; animation: fadeIn .3s ease; }
+
+/* Forgot password back link */
+.auth-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-decoration: none;
+  margin-bottom: 28px;
+  cursor: pointer;
+  background: none; border: none;
+  transition: color .2s;
+}
+.auth-back:hover { color: var(--clay); }
+
+/* Notice / success message */
+.auth-notice {
+  background: var(--parchment);
+  border-left: 3px solid var(--ochre);
+  padding: 12px 16px;
+  font-size: .9rem;
+  color: var(--ink-mid);
+  margin-bottom: 24px;
+  display: none;
+}
+.auth-notice.visible { display: block; }
+
+/* Terms note */
+.auth-terms {
+  font-size: .78rem;
+  color: var(--ink-faint);
+  line-height: 1.5;
+  margin-top: 16px;
+  text-align: center;
+}
+.auth-terms a { color: var(--clay); text-decoration: none; }
+.auth-terms a:hover { text-decoration: underline; }
+
+/* ── FOOTER ── */
+.auth-footer {
+  background: var(--warm-dark);
+  padding: 20px 24px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .08em;
+  color: rgba(250,246,240,.3);
+}
+.auth-footer a { color: rgba(250,246,240,.45); text-decoration: none; }
+.auth-footer a:hover { color: var(--ochre-pale); }
+</style>
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- LEFT: Visual -->
+  <div class="auth-visual">
+    <div class="auth-visual-photo"></div>
+    <div class="auth-visual-overlay"></div>
+    <div class="auth-visual-content">
+      <a href="/" class="auth-visual-logo">
+        Reserc
+        <span>Socio-environmental economics · LMICs</span>
+      </a>
+      <div class="auth-visual-quote">
+        <blockquote>From scattered data<br>to <em>structured argument.</em></blockquote>
+        <p class="auth-visual-caption">Research platform for LMIC economics</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Form -->
+  <div class="auth-form-panel">
+    <div class="auth-form-inner">
+
+      <a href="/" class="auth-mobile-logo">Reserc</a>
+
+      <!-- Tab switcher -->
+      <div class="auth-tabs" id="authTabs">
+        <button class="auth-tab active" data-panel="signin">Sign in</button>
+        <button class="auth-tab" data-panel="signup">Create account</button>
+      </div>
+
+      <!-- ── SIGN IN ── -->
+      <div class="auth-panel active" id="panel-signin">
+        <h1 class="auth-heading">Welcome back</h1>
+        <p class="auth-sub">Sign in to access your research workspace.</p>
+        <div class="auth-notice" id="signin-notice"></div>
+        <form id="signinForm" novalidate>
+          <div class="auth-field">
+            <label for="signin-email">Email address</label>
+            <input type="email" id="signin-email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <div class="auth-field">
+            <label for="signin-password">Password</label>
+            <div class="pw-row">
+              <input type="password" id="signin-password" placeholder="Your password" autocomplete="current-password" required>
+              <button type="button" class="pw-toggle" data-target="signin-password">Show</button>
+            </div>
+          </div>
+          <a href="#" class="auth-forgot" id="forgotLink">Forgot password?</a>
+          <button type="submit" class="auth-submit">Sign in to Reserc</button>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="#" id="toSignup">Create one</a></p>
+      </div>
+
+      <!-- ── SIGN UP ── -->
+      <div class="auth-panel" id="panel-signup">
+        <h1 class="auth-heading">Create account</h1>
+        <p class="auth-sub">Join Reserc and start building your research.</p>
+        <div class="auth-notice" id="signup-notice"></div>
+        <form id="signupForm" novalidate>
+          <div class="auth-field">
+            <label for="signup-name">Full name</label>
+            <input type="text" id="signup-name" placeholder="Your name" autocomplete="name" required>
+          </div>
+          <div class="auth-field">
+            <label for="signup-email">Email address</label>
+            <input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <div class="auth-field">
+            <label for="signup-password">Password</label>
+            <div class="pw-row">
+              <input type="password" id="signup-password" placeholder="Min. 8 characters" autocomplete="new-password" required minlength="8">
+              <button type="button" class="pw-toggle" data-target="signup-password">Show</button>
+            </div>
+          </div>
+          <div class="auth-field">
+            <label for="signup-confirm">Confirm password</label>
+            <div class="pw-row">
+              <input type="password" id="signup-confirm" placeholder="Repeat password" autocomplete="new-password" required>
+              <button type="button" class="pw-toggle" data-target="signup-confirm">Show</button>
+            </div>
+          </div>
+          <button type="submit" class="auth-submit">Create my account</button>
+        </form>
+        <p class="auth-terms">By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+        <p class="auth-switch" style="margin-top:16px">Already have an account? <a href="#" id="toSignin">Sign in</a></p>
+      </div>
+
+      <!-- ── FORGOT PASSWORD ── -->
+      <div class="auth-panel" id="panel-forgot">
+        <button class="auth-back" id="backFromForgot">← Back to sign in</button>
+        <h1 class="auth-heading">Reset password</h1>
+        <p class="auth-sub">Enter your email and we'll send you a reset link.</p>
+        <div class="auth-notice" id="forgot-notice"></div>
+        <form id="forgotForm" novalidate>
+          <div class="auth-field">
+            <label for="forgot-email">Email address</label>
+            <input type="email" id="forgot-email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <button type="submit" class="auth-submit">Send reset link</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer class="auth-footer">
+  <p>© 2026 Reserc · <a href="/">Home</a> · <a href="mailto:contactreserc@gmail.com">contactreserc@gmail.com</a></p>
+</footer>
+
+<script>
+const panels = document.querySelectorAll('.auth-panel');
+const tabs   = document.querySelectorAll('.auth-tab');
+
+function showPanel(id) {
+  panels.forEach(p => p.classList.remove('active'));
+  tabs.forEach(t => t.classList.remove('active'));
+  const p = document.getElementById('panel-' + id);
+  if (p) p.classList.add('active');
+  const t = document.querySelector(`[data-panel="${id}"]`);
+  if (t) t.classList.add('active');
+}
+
+tabs.forEach(tab => tab.addEventListener('click', () => showPanel(tab.dataset.panel)));
+document.getElementById('forgotLink').addEventListener('click', e => { e.preventDefault(); showPanel('forgot'); });
+document.getElementById('backFromForgot').addEventListener('click', () => showPanel('signin'));
+document.getElementById('toSignup').addEventListener('click', e => { e.preventDefault(); showPanel('signup'); });
+document.getElementById('toSignin').addEventListener('click', e => { e.preventDefault(); showPanel('signin'); });
+
+// Show panel from URL hash
+const hash = location.hash.replace('#','');
+if (['signup','forgot'].includes(hash)) showPanel(hash);
+
+// Password toggle
+document.querySelectorAll('.pw-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const inp = document.getElementById(btn.dataset.target);
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    btn.textContent = show ? 'Hide' : 'Show';
+  });
+});
+
+function showNotice(id, msg, isError) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.borderLeftColor = isError ? 'var(--clay)' : 'var(--ochre)';
+  el.classList.add('visible');
+}
+
+// Sign in
+document.getElementById('signinForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('signin-email').value.trim();
+  const pass  = document.getElementById('signin-password').value;
+  if (!email || !pass) { showNotice('signin-notice','Please fill in all fields.', true); return; }
+  showNotice('signin-notice', 'Authentication coming soon — stay tuned.', false);
+});
+
+// Sign up
+document.getElementById('signupForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const name  = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pass  = document.getElementById('signup-password').value;
+  const conf  = document.getElementById('signup-confirm').value;
+  if (!name || !email || !pass) { showNotice('signup-notice','Please fill in all fields.', true); return; }
+  if (pass.length < 8) { showNotice('signup-notice','Password must be at least 8 characters.', true); return; }
+  if (pass !== conf) { showNotice('signup-notice','Passwords do not match.', true); return; }
+  showNotice('signup-notice', 'Account creation coming soon — stay tuned.', false);
+});
+
+// Forgot password
+document.getElementById('forgotForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = document.getElementById('forgot-email').value.trim();
+  if (!email) { showNotice('forgot-notice','Please enter your email address.', true); return; }
+  showNotice('forgot-notice', `If an account exists for ${email}, a reset link will be sent shortly.`, false);
+});
+</script>
+</body>
+</html>

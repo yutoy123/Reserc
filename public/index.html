@@ -3,145 +3,198 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fieldnotes — Economics Research for LMICs</title>
+<title>Reserc — Economics Research for LMICs</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="/css/page-animations.css">
 </head>
 <body data-page="home">
-
-<nav class="site-nav">
+<nav class="site-nav" id="siteNav">
   <div class="site-nav-inner">
-    <a href="/" class="site-logo">
-      Fieldnotes
-      <span>Socio-environmental economics · LMICs</span>
-    </a>
+    <a href="/" class="site-logo">Reserc<span>Socio-environmental economics · LMICs</span></a>
     <ul class="nav-links">
-      <li><a href="/" data-page="home">Home</a></li>
-      <li><a href="/explore.html" data-page="explore">Explore</a></li>
-      <li><a href="/investigate.html" data-page="investigate">Investigate</a></li>
-      <li><a href="/build.html" data-page="build">Build</a></li>
-      <li><a href="/frameworks.html" data-page="frameworks">Frameworks</a></li>
+      <li><a href="/" class="is-active">Home</a></li>
+      <li><a href="/explore.html">Explore</a></li>
+      <li><a href="/investigate.html">Investigate</a></li>
+      <li><a href="/build.html">Build</a></li>
+      <li><a href="/frameworks.html">Frameworks</a></li>
     </ul>
   </div>
 </nav>
-
-<section class="hero">
-  <p class="hero-kicker">For student researchers</p>
-  <h1 class="hero-title">From scattered data to structured argument</h1>
-  <p class="hero-sub">A research platform for social and environmental economics in low- and middle-income countries — bridging data, theory, and the argument you need to make.</p>
-  <div class="hero-cta">
-    <a href="/investigate.html" class="btn btn-primary">Start investigating</a>
-    <a href="/frameworks.html" class="btn btn-secondary">Browse frameworks</a>
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 24px 100px;position:relative;overflow:hidden;background:var(--forest)}
+.hero-photo{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1600&q=80&fit=crop') center/cover no-repeat}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,28,20,.82) 0%,rgba(10,28,20,.72) 50%,rgba(10,28,20,.9) 100%)}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.32s}
+.site-nav.scrolled{background:rgba(30,58,47,.88);backdrop-filter:blur(18px)}
+.stats-band{display:grid;grid-template-columns:repeat(4,1fr);background:var(--ink);gap:1px}
+.stat-cell{background:var(--forest);padding:36px 28px;text-align:center}
+.stat-n{font-family:var(--serif);font-size:2.8rem;font-weight:700;color:var(--cream);line-height:1}
+.stat-u{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;color:var(--gold-pale);margin-top:4px}
+.stat-d{font-size:.82rem;color:rgba(245,240,232,.55);margin-top:8px}
+.section{padding:100px 24px}.section.dark{background:var(--forest)}.section.mid{background:var(--parchment)}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.section-label.light{color:var(--gold-pale)}
+.section-title{font-family:var(--serif);font-size:clamp(1.8rem,4vw,3.2rem);font-weight:700;color:var(--ink);line-height:1.12;max-width:700px}
+.section-title.light{color:var(--cream)}
+.section-sub{font-size:1.05rem;color:var(--ink-soft);max-width:560px;margin-top:14px;line-height:1.65}
+.section-sub.light{color:rgba(245,240,232,.65)}
+.walls-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2px;background:var(--rule);border:1px solid var(--rule);margin-top:56px}
+.wall{background:var(--cream);padding:44px 36px;position:relative;overflow:hidden;transition:background .3s}
+.wall::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.wall:hover::before{transform:scaleX(1)}.wall:hover{background:var(--parchment)}
+.wall-n{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;color:var(--ink-faint);margin-bottom:18px}
+.wall h3{font-family:var(--serif);font-size:1.35rem;font-weight:600;color:var(--ink);margin-bottom:12px}
+.wall p{font-size:.94rem;color:var(--ink-soft);line-height:1.68}
+.modes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:56px}
+.mode-card{background:rgba(255,255,255,.06);border:1px solid rgba(245,240,232,.15);padding:40px 36px 36px;transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s,border-color .3s}
+.mode-card:hover{transform:translateY(-7px);box-shadow:0 24px 56px rgba(0,0,0,.35);border-color:rgba(184,144,15,.4)}
+.mode-num{font-family:var(--mono);font-size:.55rem;letter-spacing:.16em;color:var(--gold-pale);margin-bottom:16px}
+.mode-card h3{font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--cream);margin-bottom:6px}
+.mode-tag{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:18px}
+.mode-card p{font-size:.93rem;color:rgba(245,240,232,.65);line-height:1.68;margin-bottom:18px}
+.mode-card blockquote{font-style:italic;font-size:.88rem;color:rgba(245,240,232,.45);border-left:2px solid var(--gold);padding-left:14px;margin-bottom:28px;line-height:1.5}
+.mode-link{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-pale);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:gap .3s}
+.mode-link:hover{gap:14px}
+.split{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:760px){.split{grid-template-columns:1fr}}
+.split-photo{position:relative;min-height:380px;overflow:hidden}
+.split-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 6s ease}
+.split-photo:hover img{transform:scale(1.04)}
+.split-text{padding:60px 56px;display:flex;flex-direction:column;justify-content:center}
+.split-text h3{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;color:var(--ink);margin-bottom:16px;line-height:1.2}
+.split-text h3.light{color:var(--cream)}
+.split-text p{font-size:.98rem;color:var(--ink-soft);line-height:1.7}
+.split-text p.light{color:rgba(245,240,232,.7)}
+.split-link{margin-top:28px;display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest);text-decoration:none;transition:gap .3s}
+.split-link.light{color:var(--gold-pale)}.split-link:hover{gap:14px}
+.photo-mosaic{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:240px 240px;gap:4px;margin-top:56px}
+.mosaic-cell{position:relative;overflow:hidden}
+.mosaic-cell img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 5s ease}
+.mosaic-cell:hover img{transform:scale(1.06)}
+.mosaic-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(10,28,20,.6) 100%)}
+.mosaic-cell.tall{grid-row:span 2}
+.mosaic-caption{position:absolute;bottom:14px;left:16px;font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.7)}
+.parallax-section{position:relative;overflow:hidden;min-height:420px;display:flex;align-items:center;justify-content:center;text-align:center}
+.parallax-bg{position:absolute;inset:-80px;background:url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1400&q=80&fit=crop') center/cover no-repeat;will-change:transform}
+.parallax-overlay{position:absolute;inset:0;background:rgba(10,28,20,.78)}
+.parallax-inner{position:relative;z-index:2;max-width:680px;padding:80px 24px}
+.parallax-inner h2{font-family:var(--serif);font-size:clamp(1.9rem,5vw,3.2rem);font-weight:700;color:var(--cream);line-height:1.15;margin-bottom:20px}
+.parallax-inner p{font-size:1.05rem;color:rgba(245,240,232,.65);line-height:1.6;margin-bottom:36px}
+.tax-table{margin-top:56px;border:1px solid var(--rule)}
+.tax-row-new{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid var(--rule)}
+.tax-row-new:last-child{border-bottom:none}
+.tax-meta-cell{padding:28px 32px;border-right:1px solid var(--rule);background:var(--parchment)}
+.tax-lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.tax-dsc{font-size:.85rem;color:var(--ink-soft);line-height:1.5}
+.tax-chips-cell{padding:24px 28px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fw-chip{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--forest);border:1px solid var(--forest);padding:8px 16px;text-decoration:none;transition:background .2s,color .2s,transform .2s;display:inline-block}
+.fw-chip:hover{background:var(--forest);color:var(--cream);transform:translateY(-2px)}
+.site-footer{background:var(--ink);color:var(--ink-faint);padding:48px 24px;text-align:center;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em}
+.site-footer a{color:var(--gold-pale);text-decoration:none}
+</style>
+<section class="hero" id="hero">
+  <div class="hero-photo"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p style="font-family:var(--mono);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-pale);animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .15s both;">For student researchers</p>
+    <h1 style="font-family:var(--serif);font-size:clamp(2.8rem,7vw,5.8rem);font-weight:700;color:var(--cream);line-height:1.06;margin:18px 0 0;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .35s both;">From scattered data<br>to <em style="color:var(--gold-pale);font-style:italic;">structured argument</em></h1>
+    <p style="font-size:clamp(.98rem,2vw,1.22rem);color:rgba(245,240,232,.68);max-width:600px;margin:22px auto 0;line-height:1.65;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .55s both;">A research platform for social and environmental economics in low- and middle-income countries.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:42px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .72s both;">
+      <a href="/investigate.html" style="background:var(--gold-lt);color:var(--ink);font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;padding:14px 30px;text-decoration:none;display:inline-block;">Start investigating</a>
+      <a href="/frameworks.html" style="background:transparent;color:var(--cream);border:1px solid rgba(245,240,232,.4);font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;padding:14px 30px;text-decoration:none;display:inline-block;">Browse frameworks</a>
+    </div>
   </div>
 </section>
-
-<main class="container-wide">
-
-  <section class="gaps-section-home">
-    <div class="container-wide">
-      <h2 class="page-title" style="text-align:center">Three walls every LMIC researcher hits</h2>
-      <p style="text-align:center;color:var(--ink-soft);max-width:560px;margin:12px auto 0">Fieldnotes is built to bridge all three — not replace your thinking, but clear the path to your argument.</p>
-      <div class="gaps-grid">
-        <div class="gap-card">
-          <h3>Data is scattered</h3>
-          <p>World Bank, IMF, GSMA, UNDP, and national statistics offices use different formats, update cycles, and coverage gaps. Finding a number is easy; knowing which source to trust is not.</p>
-        </div>
-        <div class="gap-card">
-          <h3>Frameworks are siloed</h3>
-          <p>A student studying food insecurity in Ghana may not know ecological economics or behavioral nudge theory is directly relevant. Textbooks list fields equally — your topic does not.</p>
-        </div>
-        <div class="gap-card">
-          <h3>Data → argument is hard</h3>
-          <p>Knowing mobile money penetration is 60% in Kenya is easy. Knowing what that means for financial inclusion theory, and how to build a research argument around it, is the real work.</p>
-        </div>
-      </div>
+<div class="stats-band reveal">
+  <div class="stat-cell"><div class="stat-n" data-count="130">0</div><div class="stat-u">+ Countries</div><div class="stat-d">LIC & LMC countries tracked</div></div>
+  <div class="stat-cell"><div class="stat-n" data-count="40">0</div><div class="stat-u">+ Indicators</div><div class="stat-d">Live World Bank WDI metrics</div></div>
+  <div class="stat-cell"><div class="stat-n" data-count="9">0</div><div class="stat-u">Frameworks</div><div class="stat-d">Economic lenses for LMICs</div></div>
+  <div class="stat-cell"><div class="stat-n" data-count="3">0</div><div class="stat-u">Modes</div><div class="stat-d">Explore · Investigate · Build</div></div>
+</div>
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label reveal">The problem</p>
+    <h2 class="section-title reveal reveal-delay-1">Three walls every LMIC researcher hits</h2>
+    <p class="section-sub reveal reveal-delay-2">Reserc is built to bridge all three.</p>
+    <div class="walls-grid">
+      <div class="wall reveal reveal-delay-1"><div class="wall-n">01</div><h3>Data is scattered</h3><p>World Bank, IMF, GSMA, UNDP use different formats and coverage. Finding a number is easy; knowing which source to trust is not.</p></div>
+      <div class="wall reveal reveal-delay-2"><div class="wall-n">02</div><h3>Frameworks are siloed</h3><p>A student studying food insecurity in Ghana may not know ecological economics or behavioral nudge theory is directly relevant.</p></div>
+      <div class="wall reveal reveal-delay-3"><div class="wall-n">03</div><h3>Data to argument is hard</h3><p>Knowing mobile money penetration is 60% in Kenya is easy. Knowing what that means for financial inclusion theory is the real work.</p></div>
     </div>
-  </section>
-
-  <section>
-    <h2 class="page-title" style="margin-top:48px">Three modes for where you are in your research</h2>
-    <p class="page-desc">Enter the mode that matches your stage — orientation, investigation, or argument-building.</p>
-
+  </div>
+</section>
+<div class="split reveal">
+  <div class="split-photo"><img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900&q=80&fit=crop" alt="LMIC research" loading="lazy"><div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,28,20,.4) 0%,transparent 60%)"></div></div>
+  <div class="split-text" style="background:var(--parchment)"><h3>Built for developing economy research</h3><p>Most research tools are built for high-income country data. Reserc is designed from the ground up for the gaps and realities of LMIC data.</p><a href="/investigate.html" class="split-link">Try Investigate</a></div>
+</div>
+<section class="section dark">
+  <div class="section-inner">
+    <p class="section-label light reveal">How it works</p>
+    <h2 class="section-title light reveal reveal-delay-1">Three modes for where you are in your research</h2>
     <div class="modes-grid">
-      <article class="mode-card">
-        <div class="mode-number">Mode 1 · Layer 2</div>
-        <h3 class="mode-name">Explore</h3>
-        <p class="mode-tagline">Orientation before you have a question</p>
-        <p class="mode-desc">Browse data visually — choropleth maps, metric comparisons, country profiles. See what's there before you commit to a research angle.</p>
-        <p class="mode-when">"I'm interested in Southeast Asia and financial inclusion — show me what's there."</p>
-        <a href="/explore.html" class="btn btn-forest">Open Explore</a>
-      </article>
-
-      <article class="mode-card">
-        <div class="mode-number">Mode 2 · Layer 1</div>
-        <h3 class="mode-name">Investigate</h3>
-        <p class="mode-tagline">You have a topic and region</p>
-        <p class="mode-desc">Pull World Bank data, policy context, research gaps, and suggested sources into one structured brief. Move from curiosity to grounded understanding.</p>
-        <p class="mode-when">"Food inflation in Sub-Saharan Africa — what does the data and policy landscape look like?"</p>
-        <a href="/investigate.html" class="btn btn-forest">Open Investigate</a>
-      </article>
-
-      <article class="mode-card">
-        <div class="mode-number">Mode 3 · Layer 3</div>
-        <h3 class="mode-name">Build</h3>
-        <p class="mode-tagline">You have data and a rough idea</p>
-        <p class="mode-desc">Surface the right economic frameworks, see how they've been applied in LMICs, and scaffold your move from evidence to hypothesis and research design.</p>
-        <p class="mode-when">"Informal savings groups in rural Uganda — which theories apply, and how do I structure my argument?"</p>
-        <a href="/build.html" class="btn btn-forest">Open Build</a>
-      </article>
+      <article class="mode-card reveal reveal-delay-1"><div class="mode-num">Mode 1 · Layer 2</div><h3>Explore</h3><p class="mode-tag">Orientation before you have a question</p><p>Browse live World Bank data visually across LIC and LMC countries.</p><blockquote>"I'm interested in Southeast Asia and financial inclusion."</blockquote><a href="/explore.html" class="mode-link">Open Explore</a></article>
+      <article class="mode-card reveal reveal-delay-2"><div class="mode-num">Mode 2 · Layer 1</div><h3>Investigate</h3><p class="mode-tag">You have a topic and region</p><p>Pull World Bank data, policy context, and research gaps into one AI-generated brief.</p><blockquote>"Food inflation in Sub-Saharan Africa — what does the landscape look like?"</blockquote><a href="/investigate.html" class="mode-link">Open Investigate</a></article>
+      <article class="mode-card reveal reveal-delay-3"><div class="mode-num">Mode 3 · Layer 3</div><h3>Build</h3><p class="mode-tag">You have data and a rough idea</p><p>Surface relevant frameworks and scaffold your move from evidence to hypothesis.</p><blockquote>"Informal savings groups in rural Uganda — how do I structure my argument?"</blockquote><a href="/build.html" class="mode-link">Open Build</a></article>
     </div>
-  </section>
-
-  <section class="taxonomy">
-    <h2 class="page-title">Economics frameworks organized for LMIC research</h2>
-    <p class="page-desc">Not every field is equally relevant. We organize by how each lens connects to social and environmental questions in low- and middle-income contexts.</p>
-
-    <div class="taxonomy-branch">
-      <div class="taxonomy-label">Core lens — always relevant</div>
-      <p class="taxonomy-desc">The starting point for any LMIC topic.</p>
-      <div class="taxonomy-items">
-        <a href="/frameworks.html#development-economics" class="framework-chip">Development Economics</a>
-      </div>
+  </div>
+</section>
+<section class="section mid">
+  <div class="section-inner">
+    <p class="section-label reveal">The context</p>
+    <h2 class="section-title reveal reveal-delay-1">Research grounded in real-world LMIC realities</h2>
+    <p class="section-sub reveal reveal-delay-2">From mobile money markets in East Africa to smallholder agriculture in South Asia.</p>
+    <div class="photo-mosaic reveal reveal-delay-3">
+      <div class="mosaic-cell tall"><img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80&fit=crop" alt="Market Sub-Saharan Africa" loading="lazy"><div class="mosaic-overlay"></div><div class="mosaic-caption">Sub-Saharan Africa · Food markets</div></div>
+      <div class="mosaic-cell"><img src="https://images.unsplash.com/photo-1594708767771-a7502209ff51?w=600&q=80&fit=crop" alt="Mobile banking" loading="lazy"><div class="mosaic-overlay"></div><div class="mosaic-caption">Southeast Asia · Mobile money</div></div>
+      <div class="mosaic-cell"><img src="https://images.unsplash.com/photo-1592991538534-00d14df90135?w=600&q=80&fit=crop" alt="Farming South Asia" loading="lazy"><div class="mosaic-overlay"></div><div class="mosaic-caption">South Asia · Agriculture</div></div>
     </div>
-
-    <div class="taxonomy-branch">
-      <div class="taxonomy-label">Social dimension</div>
-      <p class="taxonomy-desc">Why people choose, how institutions shape outcomes, and who bears welfare costs.</p>
-      <div class="taxonomy-items">
-        <a href="/frameworks.html#behavioral-economics" class="framework-chip">Behavioral Economics</a>
-        <a href="/frameworks.html#institutional-economics" class="framework-chip">Institutional Economics</a>
-        <a href="/frameworks.html#social-economics" class="framework-chip">Social Economics</a>
-      </div>
+  </div>
+</section>
+<section class="parallax-section">
+  <div class="parallax-bg" id="parallaxBg"></div>
+  <div class="parallax-overlay"></div>
+  <div class="parallax-inner">
+    <h2 class="reveal">Your argument starts with the right question.</h2>
+    <p class="reveal reveal-delay-1">Most research stalls not from lack of data, but from not knowing which data matters.</p>
+    <div class="reveal reveal-delay-2"><a href="/investigate.html" style="background:var(--gold-lt);color:var(--ink);font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;padding:14px 30px;text-decoration:none;display:inline-block;">Start with Investigate</a></div>
+  </div>
+</section>
+<div class="split reveal">
+  <div class="split-text" style="background:var(--forest)"><h3 class="light">Nine frameworks organized for LMIC relevance</h3><p class="light">Every framework is contextualized for low- and middle-income research.</p><a href="/frameworks.html" class="split-link light">Browse the framework library</a></div>
+  <div class="split-photo"><img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=900&q=80&fit=crop" alt="Student researcher" loading="lazy"><div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,28,20,.4) 0%,transparent 60%)"></div></div>
+</div>
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label reveal">Framework library</p>
+    <h2 class="section-title reveal reveal-delay-1">Economics organized for LMIC research</h2>
+    <div class="tax-table reveal reveal-delay-2">
+      <div class="tax-row-new"><div class="tax-meta-cell"><div class="tax-lbl">Core lens</div><div class="tax-dsc">The starting point for any LMIC topic.</div></div><div class="tax-chips-cell"><a href="/frameworks.html#development-economics" class="fw-chip">Development Economics</a></div></div>
+      <div class="tax-row-new"><div class="tax-meta-cell"><div class="tax-lbl">Social dimension</div><div class="tax-dsc">Why people choose, how institutions shape outcomes.</div></div><div class="tax-chips-cell"><a href="/frameworks.html#behavioral-economics" class="fw-chip">Behavioral Economics</a><a href="/frameworks.html#institutional-economics" class="fw-chip">Institutional Economics</a><a href="/frameworks.html#social-economics" class="fw-chip">Social Economics</a></div></div>
+      <div class="tax-row-new"><div class="tax-meta-cell"><div class="tax-lbl">Environmental dimension</div><div class="tax-dsc">Planetary limits, market instruments, alternative growth.</div></div><div class="tax-chips-cell"><a href="/frameworks.html#ecological-economics" class="fw-chip">Ecological Economics</a><a href="/frameworks.html#environmental-economics" class="fw-chip">Environmental Economics</a><a href="/frameworks.html#green-economics" class="fw-chip">Green Economics</a></div></div>
+      <div class="tax-row-new"><div class="tax-meta-cell"><div class="tax-lbl">Systems dimension</div><div class="tax-dsc">How economies are organized.</div></div><div class="tax-chips-cell"><a href="/frameworks.html#market-economy" class="fw-chip">Market Economy</a><a href="/frameworks.html#command-economy" class="fw-chip">Command Economy</a><a href="/frameworks.html#mixed-economy" class="fw-chip">Mixed Economy</a></div></div>
     </div>
-
-    <div class="taxonomy-branch">
-      <div class="taxonomy-label">Environmental dimension</div>
-      <p class="taxonomy-desc">Planetary limits, market instruments, and alternative growth models.</p>
-      <div class="taxonomy-items">
-        <a href="/frameworks.html#ecological-economics" class="framework-chip">Ecological Economics</a>
-        <a href="/frameworks.html#environmental-economics" class="framework-chip">Environmental Economics</a>
-        <a href="/frameworks.html#green-economics" class="framework-chip">Green Economics</a>
-      </div>
-    </div>
-
-    <div class="taxonomy-branch">
-      <div class="taxonomy-label">Systems dimension</div>
-      <p class="taxonomy-desc">How economies are organized — and what most LMICs actually run on.</p>
-      <div class="taxonomy-items">
-        <a href="/frameworks.html#market-economy" class="framework-chip">Market Economy</a>
-        <a href="/frameworks.html#command-economy" class="framework-chip">Command Economy</a>
-        <a href="/frameworks.html#mixed-economy" class="framework-chip">Mixed Economy</a>
-      </div>
-    </div>
-  </section>
-
-</main>
-
+  </div>
+</section>
 <footer class="site-footer">
-  <p>Fieldnotes — economics research for students studying social and environmental questions in LMICs.</p>
-  <p style="margin-top:8px"><a href="/investigate.html">Investigate</a> · <a href="/build.html">Build</a> · <a href="/frameworks.html">Frameworks</a></p>
+  <p>Reserc — economics research for students studying social and environmental questions in LMICs.</p>
+  <p style="margin-top:10px"><a href="/investigate.html">Investigate</a> · <a href="/build.html">Build</a> · <a href="/frameworks.html">Frameworks</a></p>
 </footer>
-
 <script type="module" src="/js/common.js"></script>
+<script>
+const ro=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+const nav=document.getElementById('siteNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60),{passive:true});
+const pbg=document.getElementById('parallaxBg');
+window.addEventListener('scroll',()=>{const r=pbg?.parentElement?.getBoundingClientRect();if(r&&r.top<window.innerHeight&&r.bottom>0)pbg.style.transform=`translateY(${-r.top*.25}px)`;},{passive:true});
+const co=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting){const el=e.target,t=+el.dataset.count,s=performance.now(),u=n=>{const p=Math.min((n-s)/1800,1),q=1-Math.pow(1-p,3);el.textContent=Math.round(q*t);if(p<1)requestAnimationFrame(u);};requestAnimationFrame(u);co.unobserve(el);}}),{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>co.observe(el));
+</script>
 </body>
 </html>

@@ -18,7 +18,7 @@
       <li><a href="/investigate.html" data-page="investigate">Investigate</a></li>
       <li><a href="/build.html" data-page="build">Build</a></li>
       <li><a href="/frameworks.html" data-page="frameworks">Frameworks</a></li>
-      <li><a href="/login.html" style="color:var(--ochre-pale);border:1px solid rgba(184,122,26,.4);padding:6px 14px;">Sign in</a></li>
+      <li><button onclick="logout()" style="color:var(--ochre-pale);border:1px solid rgba(184,122,26,.4);padding:6px 14px;background:none;cursor:pointer;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;">Sign out</button></li>
     </ul>
   </div>
 </nav>
@@ -59,7 +59,11 @@
   <p>Need data first? Start with <a href="/investigate.html">Investigate</a> or browse the <a href="/frameworks.html">framework library</a>.</p>
 </footer>
 
+<script src="/js/auth-guard.js"></script>
 <script type="module" src="/js/build.js"></script>
 <script type="module" src="/js/common.js"></script>
+<script>
+function logout() { localStorage.removeItem('reserc_session'); window.location.href = '/auth.html'; }
+</script>
 </body>
 </html>

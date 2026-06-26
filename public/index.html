@@ -505,6 +505,7 @@
       <li><a href="/investigate.html">Investigate</a></li>
       <li><a href="/build.html">Build</a></li>
       <li><a href="/frameworks.html">Frameworks</a></li>
+      <li><button id="navSignout" onclick="logout()" style="color:var(--ochre-pale);border:1px solid rgba(184,122,26,.4);padding:6px 14px;background:none;cursor:pointer;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;display:none;">Sign out</button></li>
     </ul>
   </div>
 </nav>
@@ -752,16 +753,9 @@
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Account</div>
-        <a href="/login.html">Sign in</a>
-        <a href="/login.html#signup">Create account</a>
-        <a href="/login.html#forgot">Forgot password</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Contact</div>
-        <a href="mailto:contactreserc@gmail.com">contactreserc@gmail.com</a>
-        <a href="https://www.instagram.com/getreserc/" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.youtube.com/@GetReserc" target="_blank" rel="noopener">YouTube</a>
-        <a href="https://www.tiktok.com/@getreserc" target="_blank" rel="noopener">TikTok</a>
+        <a href="/auth.html">Sign in</a>
+        <a href="/auth.html#signup">Create account</a>
+        <a href="/auth.html#forgot">Forgot password</a>
       </div>
     </div>
   </div>
@@ -864,6 +858,7 @@
 }
 </style>
 
+<script src="/js/auth-guard.js"></script>
 <script type="module" src="/js/common.js"></script>
 <script>
 // Scroll reveal
@@ -898,6 +893,16 @@ const co = new IntersectionObserver(e => e.forEach(e => {
   }
 }), { threshold: .5 });
 document.querySelectorAll('[data-count]').forEach(el => co.observe(el));
+
+// Auth session display
+function logout() {
+  localStorage.removeItem('reserc_session');
+  window.location.href = '/auth.html';
+}
+const session = localStorage.getItem('reserc_session');
+if (session) {
+  document.getElementById('navSignout').style.display = 'inline-block';
+}
 </script>
 </body>
 </html>

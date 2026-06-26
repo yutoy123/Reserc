@@ -202,5 +202,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`Fieldnotes running at http://0.0.0.0:${PORT}`);
+  console.log(`Reserc running at http://0.0.0.0:${PORT}`);
 });

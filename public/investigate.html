@@ -6,24 +6,10 @@
 <title>Investigate — Reserc</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="/css/sidebar.css">
 </head>
 <body data-page="investigate">
 
-<nav class="site-nav">
-  <div class="site-nav-inner">
-    <a href="/" class="site-logo">Reserc<span>Socio-environmental economics · LMICs</span></a>
-    <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li><a href="/explore.html">Explore</a></li>
-      <li><a href="/investigate.html" class="is-active">Investigate</a></li>
-      <li><a href="/build.html">Build</a></li>
-      <li><a href="/chat.html">Chat</a></li>
-      <li><a href="/library.html">Library</a></li>
-      <li><a href="/compare.html">Compare</a></li>
-      <li><button onclick="logout()" style="color:var(--ochre-pale);border:1px solid rgba(184,122,26,.4);padding:6px 14px;background:none;cursor:pointer;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;">Sign out</button></li>
-    </ul>
-  </div>
-</nav>
 
 <main class="container">
   <header class="page-header">
@@ -65,10 +51,8 @@
 </footer>
 
 <script src="/js/auth-guard.js"></script>
+<script src="/js/sidebar.js"></script>
 <script type="module" src="/js/investigate-page.js"></script>
 <script type="module" src="/js/common.js"></script>
-<script>
-async function logout() { await fetch('/api/auth/signout', { method: 'POST' }); window.location.href = '/auth.html'; }
-</script>
 </body>
 </html>

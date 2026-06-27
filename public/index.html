@@ -895,8 +895,8 @@ const co = new IntersectionObserver(e => e.forEach(e => {
 document.querySelectorAll('[data-count]').forEach(el => co.observe(el));
 
 // Auth session display
-function logout() {
-  localStorage.removeItem('reserc_session');
+async function logout() {
+  await fetch('/api/auth/signout', { method: 'POST' });
   window.location.href = '/auth.html';
 }
 const session = localStorage.getItem('reserc_session');

@@ -21,23 +21,15 @@
   --clay-lt:    #b04a20;
   --terracotta: #c4551e;
   --ochre:      #b87a1a;
-  --ochre-lt:   #d4951a;
   --ochre-pale: #f0d080;
   --warm-dark:  #1e1408;
-  --warm-mid:   #2d1e0a;
   --serif:    'Playfair Display', Georgia, serif;
   --body:     'EB Garamond', Georgia, serif;
   --mono:     'DM Mono', 'Courier New', monospace;
 }
 
-html, body {
-  height: 100%;
-  font-family: var(--body);
-  background: var(--warm-dark);
-  color: var(--ink);
-}
+html, body { height: 100%; font-family: var(--body); background: var(--warm-dark); color: var(--ink); }
 
-/* ── FULL PAGE LAYOUT ── */
 .auth-page {
   min-height: 100vh;
   display: grid;
@@ -48,334 +40,144 @@ html, body {
   .auth-bg-panel { display: none; }
 }
 
-/* ── LEFT: Background image panel ── */
-.auth-bg-panel {
-  position: relative;
-  overflow: hidden;
-}
+.auth-bg-panel { position: relative; overflow: hidden; }
 .auth-bg-photo {
   position: absolute; inset: 0;
-  background:
-    url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1400&q=80&fit=crop')
-    center / cover no-repeat;
+  background: url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1400&q=80&fit=crop') center/cover no-repeat;
   transition: transform 10s ease;
 }
 .auth-bg-panel:hover .auth-bg-photo { transform: scale(1.04); }
 .auth-bg-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(
-    160deg,
-    rgba(20,10,4,.80) 0%,
-    rgba(139,58,26,.45) 60%,
-    rgba(20,10,4,.75) 100%
-  );
+  background: linear-gradient(160deg, rgba(20,10,4,.80) 0%, rgba(139,58,26,.45) 60%, rgba(20,10,4,.75) 100%);
 }
 .auth-bg-content {
   position: relative; z-index: 2;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 52px 56px;
+  height: 100%; display: flex; flex-direction: column; padding: 52px 56px;
 }
 .auth-bg-logo {
-  font-family: var(--serif);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--cream);
-  text-decoration: none;
-  letter-spacing: .02em;
+  font-family: var(--serif); font-size: 1.5rem; font-weight: 700;
+  color: var(--cream); text-decoration: none; letter-spacing: .02em;
 }
 .auth-bg-logo span {
-  font-family: var(--mono);
-  font-size: .5rem;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--ochre-pale);
-  display: block;
-  margin-top: 3px;
+  font-family: var(--mono); font-size: .5rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ochre-pale); display: block; margin-top: 3px;
 }
-.auth-bg-quote {
-  margin-top: auto;
-  padding-bottom: 24px;
-}
+.auth-bg-quote { margin-top: auto; padding-bottom: 24px; }
 .auth-bg-quote h2 {
-  font-family: var(--serif);
-  font-size: clamp(1.6rem, 3vw, 2.6rem);
-  font-weight: 700;
-  color: var(--cream);
-  line-height: 1.15;
-  margin-bottom: 16px;
+  font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 700; color: var(--cream); line-height: 1.15; margin-bottom: 16px;
 }
-.auth-bg-quote h2 em {
-  color: var(--ochre-pale);
-  font-style: italic;
-}
-.auth-bg-quote p {
-  font-size: .95rem;
-  color: rgba(250,246,240,.5);
-  line-height: 1.6;
-  max-width: 420px;
-}
-.auth-bg-badges {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 28px;
-}
+.auth-bg-quote h2 em { color: var(--ochre-pale); font-style: italic; }
+.auth-bg-quote p { font-size: .95rem; color: rgba(250,246,240,.5); line-height: 1.6; max-width: 420px; }
+.auth-bg-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
 .auth-bg-badge {
-  font-family: var(--mono);
-  font-size: .52rem;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: rgba(250,246,240,.45);
-  border: 1px solid rgba(250,246,240,.15);
-  padding: 5px 12px;
+  font-family: var(--mono); font-size: .52rem; letter-spacing: .14em;
+  text-transform: uppercase; color: rgba(250,246,240,.45);
+  border: 1px solid rgba(250,246,240,.15); padding: 5px 12px;
 }
 
-/* ── RIGHT: Form panel ── */
-.auth-form-panel {
-  background: var(--cream);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-.auth-form-scroll {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 56px 48px;
-}
-@media (max-width: 500px) {
-  .auth-form-scroll { padding: 40px 24px; }
-}
-.auth-form-inner {
-  width: 100%;
-  max-width: 360px;
-}
+.auth-form-panel { background: var(--cream); display: flex; flex-direction: column; min-height: 100vh; }
+.auth-form-scroll { flex: 1; display: flex; align-items: center; justify-content: center; padding: 56px 48px; }
+@media (max-width: 500px) { .auth-form-scroll { padding: 40px 24px; } }
+.auth-form-inner { width: 100%; max-width: 360px; }
 
-/* Mobile logo */
 .auth-mobile-logo {
-  display: none;
-  font-family: var(--serif);
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--ink);
-  text-decoration: none;
-  margin-bottom: 36px;
+  display: none; font-family: var(--serif); font-size: 1.4rem; font-weight: 700;
+  color: var(--ink); text-decoration: none; margin-bottom: 36px;
 }
 @media (max-width: 900px) { .auth-mobile-logo { display: block; } }
 
-/* Tab switcher */
-.auth-tabs {
-  display: flex;
-  gap: 0;
-  margin-bottom: 36px;
-  border-bottom: 2px solid var(--sand);
-}
+.auth-tabs { display: flex; margin-bottom: 36px; border-bottom: 2px solid var(--sand); }
 .auth-tab {
-  font-family: var(--mono);
-  font-size: .65rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  padding: 10px 0;
-  margin-right: 28px;
-  color: var(--ink-faint);
-  cursor: pointer;
-  border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  background: none;
-  transition: color .2s, border-color .2s;
+  font-family: var(--mono); font-size: .65rem; letter-spacing: .1em;
+  text-transform: uppercase; padding: 10px 0; margin-right: 28px;
+  color: var(--ink-faint); cursor: pointer; border: none;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  background: none; transition: color .2s, border-color .2s;
 }
-.auth-tab.active {
-  color: var(--clay);
-  border-bottom-color: var(--clay);
-}
+.auth-tab.active { color: var(--clay); border-bottom-color: var(--clay); }
 
-/* Panel visibility */
 .auth-panel { display: none; }
-.auth-panel.active {
-  display: block;
-  animation: panelIn .28s cubic-bezier(.16,1,.3,1);
-}
+.auth-panel.active { display: block; animation: panelIn .28s cubic-bezier(.16,1,.3,1); }
 @keyframes panelIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Heading */
-.auth-heading {
-  font-family: var(--serif);
-  font-size: 1.85rem;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.2;
-  margin-bottom: 6px;
-}
-.auth-sub {
-  font-size: .95rem;
-  color: var(--ink-soft);
-  margin-bottom: 28px;
-  line-height: 1.55;
-}
+.auth-heading { font-family: var(--serif); font-size: 1.85rem; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 6px; }
+.auth-sub { font-size: .95rem; color: var(--ink-soft); margin-bottom: 28px; line-height: 1.55; }
 
-/* Notice */
 .auth-notice {
-  padding: 11px 14px;
-  font-family: var(--mono);
-  font-size: .65rem;
-  letter-spacing: .04em;
-  border-left: 3px solid var(--ochre);
-  background: var(--parchment);
-  color: var(--ink-mid);
-  margin-bottom: 20px;
-  display: none;
-  line-height: 1.5;
+  padding: 11px 14px; font-family: var(--mono); font-size: .65rem;
+  letter-spacing: .04em; border-left: 3px solid var(--ochre);
+  background: var(--parchment); color: var(--ink-mid);
+  margin-bottom: 20px; display: none; line-height: 1.5;
 }
 .auth-notice.show { display: block; }
 .auth-notice.error { border-left-color: var(--clay); }
 
-/* Fields */
 .auth-field { margin-bottom: 18px; }
 .auth-field label {
-  display: block;
-  font-family: var(--mono);
-  font-size: .6rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  margin-bottom: 6px;
+  display: block; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px;
 }
 .auth-field input {
-  width: 100%;
-  padding: 11px 14px;
-  font-family: var(--body);
-  font-size: 1rem;
-  border: 1px solid var(--rule);
-  background: #fff;
-  color: var(--ink);
-  outline: none;
-  transition: border-color .2s, box-shadow .2s;
+  width: 100%; padding: 11px 14px; font-family: var(--body); font-size: 1rem;
+  border: 1px solid var(--rule); background: #fff; color: var(--ink);
+  outline: none; transition: border-color .2s, box-shadow .2s;
 }
-.auth-field input:focus {
-  border-color: var(--ochre);
-  box-shadow: 0 0 0 3px rgba(184,122,26,.1);
-}
+.auth-field input:focus { border-color: var(--ochre); box-shadow: 0 0 0 3px rgba(184,122,26,.1); }
 .auth-field input::placeholder { color: var(--ink-faint); }
 
-/* Password wrapper */
 .pw-wrap { position: relative; }
 .pw-toggle {
-  position: absolute;
-  right: 12px; top: 50%;
-  transform: translateY(-50%);
-  background: none; border: none;
-  font-family: var(--mono);
-  font-size: .55rem;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  cursor: pointer;
-  transition: color .2s;
-  padding: 4px;
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; font-family: var(--mono); font-size: .55rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
+  cursor: pointer; transition: color .2s; padding: 4px;
 }
 .pw-toggle:hover { color: var(--clay); }
 
-/* Forgot link */
 .auth-forgot {
-  display: block;
-  text-align: right;
-  font-family: var(--mono);
-  font-size: .58rem;
-  letter-spacing: .08em;
-  color: var(--ink-faint);
-  text-decoration: none;
-  margin-top: -10px;
-  margin-bottom: 22px;
-  transition: color .2s;
-  cursor: pointer;
-  background: none; border: none;
+  display: block; text-align: right; font-family: var(--mono); font-size: .58rem;
+  letter-spacing: .08em; color: var(--ink-faint); text-decoration: none;
+  margin-top: -10px; margin-bottom: 22px; transition: color .2s;
+  cursor: pointer; background: none; border: none;
 }
 .auth-forgot:hover { color: var(--clay); }
 
-/* Submit */
 .auth-submit {
-  width: 100%;
-  padding: 13px;
-  font-family: var(--mono);
-  font-size: .68rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  background: var(--clay);
-  color: var(--cream);
-  border: none;
-  cursor: pointer;
-  transition: background .2s, transform .15s, box-shadow .2s;
-  margin-bottom: 18px;
+  width: 100%; padding: 13px; font-family: var(--mono); font-size: .68rem;
+  letter-spacing: .12em; text-transform: uppercase; background: var(--clay);
+  color: var(--cream); border: none; cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .2s; margin-bottom: 18px;
 }
-.auth-submit:hover {
-  background: var(--terracotta);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(139,58,26,.28);
-}
+.auth-submit:hover { background: var(--terracotta); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,58,26,.28); }
 .auth-submit:active { transform: translateY(0); }
+.auth-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
-/* Switch */
-.auth-switch {
-  text-align: center;
-  font-size: .9rem;
-  color: var(--ink-soft);
-}
+.auth-switch { text-align: center; font-size: .9rem; color: var(--ink-soft); }
 .auth-switch button {
-  background: none; border: none;
-  color: var(--clay);
-  font-family: var(--body);
-  font-size: .9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: color .2s;
-  padding: 0;
+  background: none; border: none; color: var(--clay); font-family: var(--body);
+  font-size: .9rem; font-weight: 500; cursor: pointer; padding: 0;
 }
-.auth-switch button:hover { color: var(--clay-lt); text-decoration: underline; }
+.auth-switch button:hover { text-decoration: underline; }
 
-/* Back button */
 .auth-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: .58rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  background: none; border: none;
-  cursor: pointer;
-  margin-bottom: 28px;
-  padding: 0;
-  transition: color .2s;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-faint); background: none;
+  border: none; cursor: pointer; margin-bottom: 28px; padding: 0; transition: color .2s;
 }
 .auth-back:hover { color: var(--clay); }
 
-/* Terms */
-.auth-terms {
-  font-size: .78rem;
-  color: var(--ink-faint);
-  text-align: center;
-  margin-top: 14px;
-  line-height: 1.5;
-}
+.auth-terms { font-size: .78rem; color: var(--ink-faint); text-align: center; margin-top: 14px; line-height: 1.5; }
 .auth-terms a { color: var(--clay); text-decoration: none; }
 
-/* Form footer */
 .auth-form-footer {
-  padding: 18px 24px;
-  border-top: 1px solid var(--sand);
-  text-align: center;
-  font-family: var(--mono);
-  font-size: .55rem;
-  letter-spacing: .08em;
-  color: var(--ink-faint);
+  padding: 18px 24px; border-top: 1px solid var(--sand); text-align: center;
+  font-family: var(--mono); font-size: .55rem; letter-spacing: .08em; color: var(--ink-faint);
 }
 .auth-form-footer a { color: var(--ink-soft); text-decoration: none; }
 .auth-form-footer a:hover { color: var(--clay); }
@@ -384,16 +186,11 @@ html, body {
 <body>
 
 <div class="auth-page">
-
-  <!-- LEFT: Visual panel -->
   <div class="auth-bg-panel">
     <div class="auth-bg-photo"></div>
     <div class="auth-bg-overlay"></div>
     <div class="auth-bg-content">
-      <a href="/auth.html" class="auth-bg-logo">
-        Reserc
-        <span>Socio-environmental economics · LMICs</span>
-      </a>
+      <a href="/auth.html" class="auth-bg-logo">Reserc<span>Socio-environmental economics · LMICs</span></a>
       <div class="auth-bg-quote">
         <h2>From scattered data<br>to <em>structured argument.</em></h2>
         <p>A research platform for student economists studying social and environmental questions in low- and middle-income countries.</p>
@@ -407,20 +204,18 @@ html, body {
     </div>
   </div>
 
-  <!-- RIGHT: Form panel -->
   <div class="auth-form-panel">
     <div class="auth-form-scroll">
       <div class="auth-form-inner">
 
         <a href="/auth.html" class="auth-mobile-logo">Reserc</a>
 
-        <!-- Tabs -->
         <div class="auth-tabs">
           <button class="auth-tab active" data-panel="signin">Sign in</button>
           <button class="auth-tab" data-panel="signup">Create account</button>
         </div>
 
-        <!-- ── SIGN IN ── -->
+        <!-- SIGN IN -->
         <div class="auth-panel active" id="panel-signin">
           <h1 class="auth-heading">Welcome back</h1>
           <p class="auth-sub">Sign in to access your Reserc workspace.</p>
@@ -438,12 +233,12 @@ html, body {
               </div>
             </div>
             <button type="button" class="auth-forgot" id="btn-forgot">Forgot password?</button>
-            <button type="submit" class="auth-submit">Sign in to Reserc →</button>
+            <button type="submit" class="auth-submit" id="btn-signin">Sign in to Reserc →</button>
           </form>
           <p class="auth-switch">New to Reserc? <button id="btn-to-signup">Create a free account</button></p>
         </div>
 
-        <!-- ── SIGN UP ── -->
+        <!-- SIGN UP -->
         <div class="auth-panel" id="panel-signup">
           <h1 class="auth-heading">Create account</h1>
           <p class="auth-sub">Start building structured research in minutes.</p>
@@ -460,7 +255,7 @@ html, body {
             <div class="auth-field">
               <label for="su-pw">Password</label>
               <div class="pw-wrap">
-                <input type="password" id="su-pw" placeholder="Min. 8 characters" autocomplete="new-password" required minlength="8">
+                <input type="password" id="su-pw" placeholder="Min. 8 characters" autocomplete="new-password" required>
                 <button type="button" class="pw-toggle" data-for="su-pw">Show</button>
               </div>
             </div>
@@ -471,13 +266,13 @@ html, body {
                 <button type="button" class="pw-toggle" data-for="su-pw2">Show</button>
               </div>
             </div>
-            <button type="submit" class="auth-submit">Create my account →</button>
+            <button type="submit" class="auth-submit" id="btn-signup">Create my account →</button>
           </form>
           <p class="auth-terms">By signing up you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
           <p class="auth-switch" style="margin-top:14px">Already have an account? <button id="btn-to-signin">Sign in</button></p>
         </div>
 
-        <!-- ── FORGOT PASSWORD ── -->
+        <!-- FORGOT PASSWORD -->
         <div class="auth-panel" id="panel-forgot">
           <button class="auth-back" id="btn-back">← Back to sign in</button>
           <h1 class="auth-heading">Reset password</h1>
@@ -494,7 +289,6 @@ html, body {
 
       </div>
     </div>
-
     <footer class="auth-form-footer">
       © 2026 Reserc ·
       <a href="https://www.instagram.com/getreserc/" target="_blank" rel="noopener">Instagram</a> ·
@@ -502,7 +296,6 @@ html, body {
       <a href="mailto:contactreserc@gmail.com">Contact</a>
     </footer>
   </div>
-
 </div>
 
 <script>
@@ -523,9 +316,8 @@ document.getElementById('btn-back').addEventListener('click', () => showPanel('s
 document.getElementById('btn-to-signup').addEventListener('click', () => showPanel('signup'));
 document.getElementById('btn-to-signin').addEventListener('click', () => showPanel('signin'));
 
-// Respect URL hash
-const hash = location.hash.replace('#','');
-if (['signup','forgot'].includes(hash)) showPanel(hash);
+const hash = location.hash.replace('#', '');
+if (['signup', 'forgot'].includes(hash)) showPanel(hash);
 
 // ── Password toggle ──
 document.querySelectorAll('.pw-toggle').forEach(btn => {
@@ -538,42 +330,45 @@ document.querySelectorAll('.pw-toggle').forEach(btn => {
 });
 
 // ── Notice helper ──
-function notice(id, msg, isError) {
-  const el = document.getElementById('notice-' + id);
+function notice(panel, msg, isError) {
+  const el = document.getElementById('notice-' + panel);
   el.textContent = msg;
   el.className = 'auth-notice show' + (isError ? ' error' : '');
 }
 
-// ── Redirect helper ──
-function getNextUrl() {
-  const params = new URLSearchParams(location.search);
-  const next = params.get('next');
-  return (next && next.startsWith('/') && !next.startsWith('//')) ? next : '/';
+// ── Redirect destination ──
+function getNext() {
+  const p = new URLSearchParams(location.search).get('next');
+  return (p && p.startsWith('/') && !p.startsWith('//')) ? p : '/';
 }
 
 // ── Sign in ──
-document.getElementById('form-signin').addEventListener('submit', e => {
+document.getElementById('form-signin').addEventListener('submit', async e => {
   e.preventDefault();
-  const email = document.getElementById('si-email').value.trim();
-  const pass  = document.getElementById('si-password').value;
-  if (!email || !pass) { notice('signin', 'Please fill in all fields.', true); return; }
-
-  // Simulate auth — in production replace this block with a real API call
-  const stored = localStorage.getItem('reserc_user');
-  if (stored) {
-    const user = JSON.parse(stored);
-    if (user.email === email) {
-      localStorage.setItem('reserc_session', JSON.stringify({ email, name: user.name, ts: Date.now() }));
-      window.location.href = getNextUrl();
-      return;
-    }
+  const btn = document.getElementById('btn-signin');
+  const email    = document.getElementById('si-email').value.trim();
+  const password = document.getElementById('si-password').value;
+  if (!email || !password) { notice('signin', 'Please fill in all fields.', true); return; }
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const res  = await fetch('/api/auth/signin', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!data.ok) { notice('signin', data.error, true); return; }
+    window.location.href = getNext();
+  } catch {
+    notice('signin', 'Network error — please try again.', true);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sign in to Reserc →';
   }
-  notice('signin', 'No account found for that email. Create one below.', true);
 });
 
 // ── Sign up ──
-document.getElementById('form-signup').addEventListener('submit', e => {
+document.getElementById('form-signup').addEventListener('submit', async e => {
   e.preventDefault();
+  const btn = document.getElementById('btn-signup');
   const name  = document.getElementById('su-name').value.trim();
   const email = document.getElementById('su-email').value.trim();
   const pass  = document.getElementById('su-pw').value;
@@ -581,11 +376,20 @@ document.getElementById('form-signup').addEventListener('submit', e => {
   if (!name || !email || !pass) { notice('signup', 'Please fill in all fields.', true); return; }
   if (pass.length < 8)          { notice('signup', 'Password must be at least 8 characters.', true); return; }
   if (pass !== conf)             { notice('signup', 'Passwords do not match.', true); return; }
-
-  // Save user locally and create session
-  localStorage.setItem('reserc_user', JSON.stringify({ name, email }));
-  localStorage.setItem('reserc_session', JSON.stringify({ email, name, ts: Date.now() }));
-  window.location.href = getNextUrl();
+  btn.disabled = true; btn.textContent = 'Creating account…';
+  try {
+    const res  = await fetch('/api/auth/signup', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password: pass }),
+    });
+    const data = await res.json();
+    if (!data.ok) { notice('signup', data.error, true); return; }
+    window.location.href = getNext();
+  } catch {
+    notice('signup', 'Network error — please try again.', true);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Create my account →';
+  }
 });
 
 // ── Forgot password ──

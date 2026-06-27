@@ -66,7 +66,7 @@
 <script type="module" src="/js/investigate-page.js"></script>
 <script type="module" src="/js/common.js"></script>
 <script>
-function logout() { localStorage.removeItem('reserc_session'); window.location.href = '/auth.html'; }
+async function logout() { await fetch('/api/auth/signout', { method: 'POST' }); window.location.href = '/auth.html'; }
 </script>
 </body>
 </html>

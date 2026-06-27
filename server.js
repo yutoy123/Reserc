@@ -9,24 +9,21 @@ import { fetchExploreData } from "./lib/exploreFetch.js";
 import { fetchExploreSummary } from "./lib/exploreSummary.js";
 import { initDb } from "./lib/db.js";
 import { signup, signin, signout, getSession, setCookieHeader, clearCookieHeader } from "./lib/auth.js";
+import { saveItem, recordHistory, toggleSaved, deleteItem, getLibrary, getHistory, getItem } from "./lib/library.js";
+import { streamChat } from "./lib/chatAgent.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
 const PUBLIC = path.join(__dirname, "public");
 
 const MIME = {
-  ".html": "text/html",
-  ".css": "text/css",
-  ".js": "text/javascript",
-  ".json": "application/json",
-  ".svg": "image/svg+xml",
+  ".html": "text/html", ".css": "text/css", ".js": "text/javascript",
+  ".json": "application/json", ".svg": "image/svg+xml",
 };
 
-// Protected pages — server will redirect to /auth.html if no valid session
 const PROTECTED = [
-  "/", "/index.html",
-  "/explore.html", "/investigate.html",
-  "/build.html", "/frameworks.html",
+  "/", "/index.html", "/explore.html", "/investigate.html",
+  "/build.html", "/frameworks.html", "/chat.html", "/library.html", "/compare.html",
 ];
 
 function loadEnv() {
@@ -46,7 +43,7 @@ function loadEnv() {
 function readBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
-    req.on("data", (c) => chunks.push(c));
+    req.on("data", c => chunks.push(c));
     req.on("end", () => resolve(Buffer.concat(chunks).toString()));
     req.on("error", reject);
   });
@@ -67,21 +64,10 @@ function redirect(res, location, cookie) {
 function serveStatic(req, res) {
   const urlPath = (req.url || "/").split("?")[0];
   let filePath = path.join(PUBLIC, urlPath === "/" ? "index.html" : urlPath);
-
-  if (!filePath.startsWith(PUBLIC)) {
-    res.writeHead(403);
-    return res.end("Forbidden");
-  }
-
-  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+  if (!filePath.startsWith(PUBLIC)) { res.writeHead(403); return res.end("Forbidden"); }
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory())
     filePath = path.join(filePath, "index.html");
-  }
-
-  if (!fs.existsSync(filePath)) {
-    res.writeHead(404);
-    return res.end("Not found");
-  }
-
+  if (!fs.existsSync(filePath)) { res.writeHead(404); return res.end("Not found"); }
   const ext = path.extname(filePath);
   res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
   fs.createReadStream(filePath).pipe(res);
@@ -92,20 +78,16 @@ loadEnv();
 const server = http.createServer(async (req, res) => {
   const url = req.url?.split("?")[0];
 
-  // ── AUTH API ──────────────────────────────────────────────
+  // ── AUTH ─────────────────────────────────────────────────────────
 
   if (req.method === "POST" && url === "/api/auth/signup") {
     try {
       const { name, email, password } = JSON.parse(await readBody(req));
       const result = await signup(name, email, password);
       if (!result.ok) return sendJson(res, 400, result);
-      res.writeHead(200, {
-        "Content-Type": "application/json",
-        "Set-Cookie": setCookieHeader(result.sessionId),
-      });
+      res.writeHead(200, { "Content-Type": "application/json", "Set-Cookie": setCookieHeader(result.sessionId) });
       return res.end(JSON.stringify({ ok: true, user: result.user }));
     } catch (err) {
-      console.error("Signup error:", err.message);
       return sendJson(res, 500, { ok: false, error: "Server error during signup." });
     }
   }
@@ -115,13 +97,9 @@ const server = http.createServer(async (req, res) => {
       const { email, password } = JSON.parse(await readBody(req));
       const result = await signin(email, password);
       if (!result.ok) return sendJson(res, 401, result);
-      res.writeHead(200, {
-        "Content-Type": "application/json",
-        "Set-Cookie": setCookieHeader(result.sessionId),
-      });
+      res.writeHead(200, { "Content-Type": "application/json", "Set-Cookie": setCookieHeader(result.sessionId) });
       return res.end(JSON.stringify({ ok: true, user: result.user }));
     } catch (err) {
-      console.error("Signin error:", err.message);
       return sendJson(res, 500, { ok: false, error: "Server error during sign in." });
     }
   }
@@ -129,14 +107,9 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "POST" && url === "/api/auth/signout") {
     try {
       await signout(req.headers.cookie);
-      res.writeHead(200, {
-        "Content-Type": "application/json",
-        "Set-Cookie": clearCookieHeader(),
-      });
+      res.writeHead(200, { "Content-Type": "application/json", "Set-Cookie": clearCookieHeader() });
       return res.end(JSON.stringify({ ok: true }));
-    } catch (err) {
-      return sendJson(res, 500, { ok: false, error: "Server error during sign out." });
-    }
+    } catch { return sendJson(res, 500, { ok: false }); }
   }
 
   if (req.method === "GET" && url === "/api/auth/me") {
@@ -144,29 +117,133 @@ const server = http.createServer(async (req, res) => {
       const session = await getSession(req.headers.cookie);
       if (!session) return sendJson(res, 401, { ok: false });
       return sendJson(res, 200, { ok: true, user: { id: session.user_id, name: session.name, email: session.email } });
-    } catch (err) {
-      return sendJson(res, 500, { ok: false, error: "Server error." });
-    }
+    } catch { return sendJson(res, 500, { ok: false }); }
   }
 
-  // ── PROTECTED PAGE GUARD ──────────────────────────────────
+  // ── PROTECTED PAGE GUARD ──────────────────────────────────────────
 
   if (req.method === "GET" && PROTECTED.includes(url)) {
     const session = await getSession(req.headers.cookie);
-    if (!session) {
-      return redirect(res, `/auth.html?next=${encodeURIComponent(url)}`);
+    if (!session) return redirect(res, `/auth.html?next=${encodeURIComponent(url)}`);
+  }
+
+  // ── LIBRARY ───────────────────────────────────────────────────────
+
+  if (req.method === "POST" && url === "/api/library/save") {
+    try {
+      const session = await getSession(req.headers.cookie);
+      if (!session) return sendJson(res, 401, { ok: false, error: "Not authenticated." });
+      const { type, title, topic, region, payload, countryA, countryB } = JSON.parse(await readBody(req));
+      const id = await saveItem(session.user_id, type, title, topic, region, payload, countryA, countryB);
+      return sendJson(res, 200, { ok: true, id });
+    } catch (err) {
+      console.error("Library save error:", err.message);
+      return sendJson(res, 500, { ok: false, error: "Failed to save." });
     }
   }
 
-  // ── EXISTING API ROUTES ───────────────────────────────────
+  if (req.method === "GET" && url === "/api/library") {
+    try {
+      const session = await getSession(req.headers.cookie);
+      if (!session) return sendJson(res, 401, { ok: false });
+      const items = await getLibrary(session.user_id);
+      return sendJson(res, 200, { ok: true, items });
+    } catch (err) {
+      return sendJson(res, 500, { ok: false });
+    }
+  }
+
+  if (req.method === "GET" && url === "/api/history") {
+    try {
+      const session = await getSession(req.headers.cookie);
+      if (!session) return sendJson(res, 401, { ok: false });
+      const items = await getHistory(session.user_id);
+      return sendJson(res, 200, { ok: true, items });
+    } catch (err) {
+      return sendJson(res, 500, { ok: false });
+    }
+  }
+
+  const toggleMatch = url?.match(/^\/api\/library\/(\d+)\/toggle$/);
+  if (req.method === "POST" && toggleMatch) {
+    try {
+      const session = await getSession(req.headers.cookie);
+      if (!session) return sendJson(res, 401, { ok: false });
+      const result = await toggleSaved(session.user_id, parseInt(toggleMatch[1]));
+      return sendJson(res, 200, { ok: true, saved: result?.saved });
+    } catch { return sendJson(res, 500, { ok: false }); }
+  }
+
+  const deleteMatch = url?.match(/^\/api\/library\/(\d+)$/);
+  if (req.method === "DELETE" && deleteMatch) {
+    try {
+      const session = await getSession(req.headers.cookie);
+      if (!session) return sendJson(res, 401, { ok: false });
+      await deleteItem(session.user_id, parseInt(deleteMatch[1]));
+      return sendJson(res, 200, { ok: true });
+    } catch { return sendJson(res, 500, { ok: false }); }
+  }
+
+  const getItemMatch = url?.match(/^\/api\/library\/(\d+)$/);
+  if (req.method === "GET" && getItemMatch) {
+    try {
+      const session = await getSession(req.headers.cookie);
+      if (!session) return sendJson(res, 401, { ok: false });
+      const item = await getItem(session.user_id, parseInt(getItemMatch[1]));
+      if (!item) return sendJson(res, 404, { ok: false });
+      return sendJson(res, 200, { ok: true, item });
+    } catch { return sendJson(res, 500, { ok: false }); }
+  }
+
+  // ── CHAT ─────────────────────────────────────────────────────────
+
+  if (req.method === "POST" && url === "/api/chat") {
+    try {
+      const session = await getSession(req.headers.cookie);
+      if (!session) return sendJson(res, 401, { ok: false, error: "Not authenticated." });
+      const { messages } = JSON.parse(await readBody(req));
+      if (!messages?.length) return sendJson(res, 400, { ok: false, error: "Messages required." });
+      res.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+      });
+      await streamChat(messages, res);
+    } catch (err) {
+      console.error("Chat error:", err.message);
+      if (!res.headersSent) return sendJson(res, 500, { ok: false, error: "Chat failed." });
+      res.end();
+    }
+    return;
+  }
+
+  // ── COMPARE ──────────────────────────────────────────────────────
+
+  if (req.method === "POST" && url === "/api/compare") {
+    try {
+      const session = await getSession(req.headers.cookie);
+      if (!session) return sendJson(res, 401, { ok: false });
+      const { regionA, regionB, topic } = JSON.parse(await readBody(req));
+      if (!regionA || !regionB) return sendJson(res, 400, { ok: false, error: "Two regions required." });
+      const t = topic?.trim() || "economic development";
+      const [dataA, dataB] = await Promise.all([
+        fetchWorldBankData(regionA, t),
+        fetchWorldBankData(regionB, t),
+      ]);
+      return sendJson(res, 200, { ok: true, regionA: dataA, regionB: dataB });
+    } catch (err) {
+      console.error("Compare error:", err.message);
+      return sendJson(res, 500, { ok: false, error: "Failed to fetch comparison data." });
+    }
+  }
+
+  // ── EXISTING ROUTES ───────────────────────────────────────────────
 
   if (req.method === "GET" && url === "/api/regions") {
     const regions = Object.entries(REGION_CODES)
       .filter(([key]) => key.length > 3)
-      .map(([name, code]) => ({
-        name: name.replace(/\b\w/g, (c) => c.toUpperCase()),
-        code,
-      }));
+      .map(([name, code]) => ({ name: name.replace(/\b\w/g, c => c.toUpperCase()), code }));
     return sendJson(res, 200, regions);
   }
 
@@ -176,88 +253,63 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "POST" && url === "/api/explore") {
     try {
-      const body = JSON.parse(await readBody(req));
-      const { interest, region } = body;
-      if (!interest?.trim() || !region?.trim()) {
+      const { interest, region } = JSON.parse(await readBody(req));
+      if (!interest?.trim() || !region?.trim())
         return sendJson(res, 400, { success: false, error: "Interest and region are required." });
-      }
       const exploreData = await fetchExploreData(interest.trim(), region.trim());
-      const summary = await fetchExploreSummary(
-        exploreData.topic, exploreData.region,
-        exploreData.dataSummary || "No indicator data available."
-      );
+      const summary = await fetchExploreSummary(exploreData.topic, exploreData.region, exploreData.dataSummary || "No indicator data available.");
       const { rawApiResponses, ...payload } = exploreData;
-      return sendJson(res, 200, {
-        success: true, ...payload,
-        summary: summary.paragraph,
-        summaryGenerated: summary.success,
-        rawApiResponses,
-      });
+      return sendJson(res, 200, { success: true, ...payload, summary: summary.paragraph, summaryGenerated: summary.success, rawApiResponses });
     } catch (err) {
-      console.error("Explore endpoint error:", err.message);
       return sendJson(res, 500, { success: false, error: "Failed to load regional snapshot." });
     }
   }
 
   if (req.method === "POST" && url === "/api/build") {
     try {
-      const body = JSON.parse(await readBody(req));
-      const { topic, region } = body;
-      if (!topic?.trim()) {
-        return sendJson(res, 400, { success: false, error: "Topic is required." });
-      }
+      const { topic, region } = JSON.parse(await readBody(req));
+      if (!topic?.trim()) return sendJson(res, 400, { success: false, error: "Topic is required." });
+      const session = await getSession(req.headers.cookie);
       const data = buildLocalReport(topic.trim(), region?.trim() || null);
+      if (session) {
+        const title = `Build: ${topic.trim()}${region ? ` · ${region}` : ""}`;
+        recordHistory(session.user_id, "build", title, topic.trim(), region || null, data).catch(() => {});
+      }
       return sendJson(res, 200, { success: true, data });
     } catch (err) {
-      console.error("Build endpoint error:", err.message);
       return sendJson(res, 500, { success: false, error: "Failed to build research scaffold." });
     }
   }
 
   if (req.method === "POST" && url === "/api/research") {
     try {
-      const body = JSON.parse(await readBody(req));
-      const { topic, region } = body;
-      if (!topic?.trim() || !region?.trim()) {
+      const { topic, region } = JSON.parse(await readBody(req));
+      if (!topic?.trim() || !region?.trim())
         return sendJson(res, 400, { success: false, error: "Topic and region are required." });
-      }
       const wb = await fetchWorldBankData(region, topic);
       const result = await fetchResearchReport(topic, region, wb.formatted);
       if (!result.success) return sendJson(res, 502, result);
       const matched = matchFrameworks(topic);
-      const frameworks = matched.map((fw) => ({
+      const frameworks = matched.map(fw => ({
         id: fw.id, name: fw.name, dimension: fw.dimension,
-        relevance: fw.matches?.length
-          ? `Matched: ${fw.matches.slice(0, 3).join(", ")}`
-          : "Core lens for LMIC research",
+        relevance: fw.matches?.length ? `Matched: ${fw.matches.slice(0, 3).join(", ")}` : "Core lens for LMIC research",
       }));
-      return sendJson(res, 200, {
-        success: true, data: result.data,
-        meta: {
-          region: wb.regionLabel, regionCode: wb.regionCode,
-          yearRange: wb.yearRange, worldBankData: wb.formatted, frameworks,
-        },
-      });
+      const session = await getSession(req.headers.cookie);
+      if (session) {
+        const title = `${topic} · ${region}`;
+        recordHistory(session.user_id, "investigate", title, topic, region, { data: result.data, meta: { region: wb.regionLabel, worldBankData: wb.formatted, frameworks } }).catch(() => {});
+      }
+      return sendJson(res, 200, { success: true, data: result.data, meta: { region: wb.regionLabel, regionCode: wb.regionCode, yearRange: wb.yearRange, worldBankData: wb.formatted, frameworks } });
     } catch (err) {
-      console.error("Research endpoint error:", err.message);
       return sendJson(res, 500, { success: false, error: "Failed to fetch data. Check your connection and try again." });
     }
   }
 
   if (req.method === "GET") return serveStatic(req, res);
-
   res.writeHead(405);
   res.end("Method not allowed");
 });
 
-// Init DB tables then start server
 initDb()
-  .then(() => {
-    server.listen(PORT, "0.0.0.0", () => {
-      console.log(`Reserc running at http://0.0.0.0:${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("Failed to initialise database:", err.message);
-    process.exit(1);
-  });
+  .then(() => server.listen(PORT, "0.0.0.0", () => console.log(`Reserc running at http://0.0.0.0:${PORT}`)))
+  .catch(err => { console.error("DB init failed:", err.message); process.exit(1); });

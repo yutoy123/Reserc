@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Library — Reserc</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+.lib-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--sand);
+  margin-bottom: 32px;
+}
+.lib-tab {
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 10px 0;
+  margin-right: 28px;
+  color: var(--ink-faint);
+  cursor: pointer;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  background: none;
+  transition: color .2s, border-color .2s;
+}
+.lib-tab.active { color: var(--clay); border-bottom-color: var(--clay); }
+
+.lib-panel { display: none; }
+.lib-panel.active { display: block; }
+
+.lib-empty {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--ink-faint);
+}
+.lib-empty-icon { font-size: 2.5rem; margin-bottom: 16px; }
+.lib-empty h3 { font-family: var(--serif); font-size: 1.2rem; color: var(--ink-soft); margin-bottom: 8px; }
+.lib-empty p { font-size: .92rem; color: var(--ink-faint); }
+
+.lib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.lib-card {
+  background: var(--parchment);
+  border: 1px solid var(--sand);
+  padding: 20px;
+  transition: border-color .2s, box-shadow .2s;
+  position: relative;
+}
+.lib-card:hover { border-color: var(--rule); box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+
+.lib-card-type {
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.type-investigate { background: var(--ochre); color: var(--cream); }
+.type-build       { background: var(--clay);  color: var(--cream); }
+.type-compare     { background: var(--warm-dark); color: var(--ochre-pale); }
+
+.lib-card-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.lib-card-meta {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .06em;
+  color: var(--ink-faint);
+  margin-bottom: 14px;
+}
+
+.lib-card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lib-btn {
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border: 1px solid var(--rule);
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  display: inline-block;
+}
+.lib-btn:hover { border-color: var(--ochre); color: var(--clay); }
+.lib-btn.danger:hover { border-color: var(--clay); color: var(--clay); }
+.lib-btn.save-btn { border-color: var(--ochre); color: var(--ochre); }
+.lib-btn.save-btn.saved { background: var(--ochre); color: var(--cream); }
+
+.lib-loading {
+  text-align: center;
+  padding: 40px;
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .1em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body data-page="library">
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="/" class="site-logo">Reserc<span>Socio-environmental economics · LMICs</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/explore.html">Explore</a></li>
+      <li><a href="/investigate.html">Investigate</a></li>
+      <li><a href="/build.html">Build</a></li>
+      <li><a href="/chat.html">Chat</a></li>
+      <li><a href="/library.html" class="is-active">Library</a></li>
+      <li><a href="/compare.html">Compare</a></li>
+      <li><button onclick="logout()" style="color:var(--ochre-pale);border:1px solid rgba(184,122,26,.4);padding:6px 14px;background:none;cursor:pointer;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;">Sign out</button></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container">
+  <header class="page-header">
+    <p class="page-kicker">Your research</p>
+    <h1 class="page-title">Research Library</h1>
+    <p class="page-desc">Saved reports and your full research history across Investigate, Build, and Compare.</p>
+  </header>
+
+  <div class="lib-tabs">
+    <button class="lib-tab active" data-panel="saved">Saved</button>
+    <button class="lib-tab" data-panel="history">History</button>
+  </div>
+
+  <div class="lib-panel active" id="panel-saved">
+    <div class="lib-loading" id="saved-loading">Loading saved research…</div>
+    <div class="lib-grid" id="saved-grid" style="display:none"></div>
+    <div class="lib-empty" id="saved-empty" style="display:none">
+      <div class="lib-empty-icon">📂</div>
+      <h3>No saved research yet</h3>
+      <p>After running an Investigate or Build report, click "Save to Library" to keep it here.</p>
+    </div>
+  </div>
+
+  <div class="lib-panel" id="panel-history">
+    <div class="lib-loading" id="history-loading">Loading history…</div>
+    <div class="lib-grid" id="history-grid" style="display:none"></div>
+    <div class="lib-empty" id="history-empty" style="display:none">
+      <div class="lib-empty-icon">🕐</div>
+      <h3>No research history yet</h3>
+      <p>Every Investigate, Build, and Compare run is automatically tracked here.</p>
+    </div>
+  </div>
+</main>
+
+<script src="/js/auth-guard.js"></script>
+<script>
+async function logout() { await fetch('/api/auth/signout', { method: 'POST' }); window.location.href = '/auth.html'; }
+
+const tabs = document.querySelectorAll('.lib-tab');
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.lib-panel').forEach(p => p.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('panel-' + t.dataset.panel).classList.add('active');
+}));
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function typeLabel(type) {
+  const labels = { investigate: 'Investigate', build: 'Build', compare: 'Compare' };
+  return labels[type] || type;
+}
+
+function openUrl(item) {
+  if (item.type === 'investigate') return `/investigate.html?topic=${encodeURIComponent(item.topic)}&region=${encodeURIComponent(item.region||'')}`;
+  if (item.type === 'build')       return `/build.html?topic=${encodeURIComponent(item.topic)}${item.region?'&region='+encodeURIComponent(item.region):''}`;
+  if (item.type === 'compare')     return `/compare.html?a=${encodeURIComponent(item.country_a||'')}&b=${encodeURIComponent(item.country_b||'')}`;
+  return '#';
+}
+
+function renderCards(items, gridId, emptyId, loadingId) {
+  document.getElementById(loadingId).style.display = 'none';
+  const grid  = document.getElementById(gridId);
+  const empty = document.getElementById(emptyId);
+  if (!items.length) { empty.style.display = 'block'; return; }
+  grid.style.display = 'grid';
+
+  grid.innerHTML = items.map(item => `
+    <div class="lib-card" data-id="${item.id}">
+      <span class="lib-card-type type-${esc(item.type)}">${esc(typeLabel(item.type))}</span>
+      <div class="lib-card-title">${esc(item.title)}</div>
+      <div class="lib-card-meta">
+        ${item.region ? esc(item.region) + ' · ' : ''}${fmtDate(item.created_at)}
+      </div>
+      <div class="lib-card-actions">
+        <a href="${openUrl(item)}" class="lib-btn">Re-run →</a>
+        <button class="lib-btn save-btn ${item.saved?'saved':''}" data-id="${item.id}" onclick="toggleSave(this,${item.id})">
+          ${item.saved ? '★ Saved' : '☆ Save'}
+        </button>
+        <button class="lib-btn danger" data-id="${item.id}" onclick="deleteItem(this,${item.id})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function toggleSave(btn, id) {
+  const res  = await fetch(`/api/library/${id}/toggle`, { method: 'POST' });
+  const data = await res.json();
+  if (data.ok) {
+    btn.textContent = data.saved ? '★ Saved' : '☆ Save';
+    btn.classList.toggle('saved', data.saved);
+  }
+}
+
+async function deleteItem(btn, id) {
+  if (!confirm('Delete this research item?')) return;
+  const res = await fetch(`/api/library/${id}`, { method: 'DELETE' });
+  if ((await res.json()).ok) {
+    btn.closest('.lib-card').remove();
+    checkEmpty('saved-grid', 'saved-empty');
+    checkEmpty('history-grid', 'history-empty');
+  }
+}
+
+function checkEmpty(gridId, emptyId) {
+  const grid = document.getElementById(gridId);
+  if (grid && grid.children.length === 0) {
+    grid.style.display = 'none';
+    document.getElementById(emptyId).style.display = 'block';
+  }
+}
+
+async function load() {
+  const [savedRes, historyRes] = await Promise.all([
+    fetch('/api/library'),
+    fetch('/api/history'),
+  ]);
+  const [savedData, historyData] = await Promise.all([savedRes.json(), historyRes.json()]);
+  renderCards(savedData.items || [], 'saved-grid', 'saved-empty', 'saved-loading');
+  renderCards(historyData.items || [], 'history-grid', 'history-empty', 'history-loading');
+}
+load();
+</script>
+</body>
+</html>

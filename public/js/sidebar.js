@@ -70,21 +70,16 @@
     </div>`).join('');
 
   const html = `
-    <!-- Prelayers -->
+    <!-- Prelayer -->
     <div class="sm-prelayer" id="smPre1"></div>
-    <div class="sm-prelayer" id="smPre2"></div>
 
     <!-- Panel -->
     <div class="sm-panel" id="smPanel" role="dialog" aria-modal="true" aria-label="Navigation">
       <div class="sm-panel-inner">
         <div class="sm-panel-head">
           <a href="/" class="sm-panel-logo">
-            <span class="sm-panel-logo-mark">R</span>
             <span class="sm-panel-logo-text">Reserc</span>
           </a>
-          <button class="sm-panel-close" id="smClose" aria-label="Close menu">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>
-          </button>
         </div>
 
         <nav class="sm-nav">${sectionsHtml}</nav>
@@ -130,11 +125,8 @@
   loadGSAP(function () {
     const panel   = document.getElementById('smPanel');
     const pre1    = document.getElementById('smPre1');
-    const pre2    = document.getElementById('smPre2');
     const toggle  = document.getElementById('smToggle');
-    const closeBtn= document.getElementById('smClose');
     const overlay = document.getElementById('smOverlay');
-    const bars    = document.getElementById('smBars');
     const allItems= panel.querySelectorAll('.sm-item-label');
 
     let isOpen   = false;
@@ -143,7 +135,7 @@
     let closeTw  = null;
 
     // Initial positions — all offscreen left
-    gsap.set([pre1, pre2, panel], { xPercent: -100, opacity: 1 });
+    gsap.set([pre1, panel], { xPercent: -100, opacity: 1 });
     gsap.set(allItems, { yPercent: 120, rotate: 8, opacity: 0 });
 
     function playOpen() {
@@ -158,9 +150,8 @@
         onComplete: () => { busy = false; }
       });
 
-      // Pre-layers sweep in staggered
-      tl.fromTo(pre1, { xPercent: -100 }, { xPercent: 0, duration: 0.45, ease: 'power4.out' }, 0);
-      tl.fromTo(pre2, { xPercent: -100 }, { xPercent: 0, duration: 0.48, ease: 'power4.out' }, 0.06);
+      // Pre-layer sweeps in
+      tl.fromTo(pre1, { xPercent: -100 }, { xPercent: 0, duration: 0.42, ease: 'power4.out' }, 0);
       // Panel sweeps in
       tl.fromTo(panel, { xPercent: -100 }, { xPercent: 0, duration: 0.6, ease: 'power4.out' }, 0.12);
       // Nav items stagger up
@@ -186,9 +177,8 @@
     function playClose() {
       if (openTl) { openTl.kill(); openTl = null; }
 
-      const all = [pre1, pre2, panel];
       if (closeTw) closeTw.kill();
-      closeTw = gsap.to(all, {
+      closeTw = gsap.to([pre1, panel], {
         xPercent: -100, duration: 0.3, ease: 'power3.in', overwrite: 'auto',
         onComplete: () => { busy = false; }
       });
@@ -217,7 +207,6 @@
     }
 
     toggle.addEventListener('click', toggle_menu);
-    closeBtn.addEventListener('click', close);
     overlay.addEventListener('click', close);
 
     // Close when a nav link is clicked

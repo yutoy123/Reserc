@@ -105,8 +105,59 @@ html, body { height: 100%; font-family: var(--body); background: var(--warm-dark
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.auth-heading { font-family: var(--serif); font-size: 1.85rem; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 6px; }
-.auth-sub { font-size: .95rem; color: var(--ink-soft); margin-bottom: 28px; line-height: 1.55; }
+/* ── Split-text heading animation ── */
+.auth-heading {
+  font-family: var(--serif); font-size: 1.85rem; font-weight: 700;
+  color: var(--ink); line-height: 1.2; margin-bottom: 6px;
+  overflow: hidden;
+}
+.st-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.45s cubic-bezier(.16,1,.3,1), transform 0.45s cubic-bezier(.16,1,.3,1);
+}
+.st-char.st-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.auth-sub { font-size: .95rem; color: var(--ink-soft); margin-bottom: 24px; line-height: 1.55; }
+
+/* ── OAuth buttons ── */
+.oauth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.oauth-btn {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 11px 14px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: var(--ink-mid);
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .06em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+  white-space: nowrap;
+}
+.oauth-btn:hover {
+  border-color: var(--ink-soft);
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  background: var(--parchment);
+}
+.oauth-btn svg { flex-shrink: 0; width: 18px; height: 18px; }
+
+.oauth-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 20px; color: var(--ink-faint);
+  font-family: var(--mono); font-size: .55rem; letter-spacing: .1em; text-transform: uppercase;
+}
+.oauth-divider::before,
+.oauth-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--sand);
+}
 
 .auth-notice {
   padding: 11px 14px; font-family: var(--mono); font-size: .65rem;
@@ -217,8 +268,28 @@ html, body { height: 100%; font-family: var(--body); background: var(--warm-dark
 
         <!-- SIGN IN -->
         <div class="auth-panel active" id="panel-signin">
-          <h1 class="auth-heading">Welcome back</h1>
+          <h1 class="auth-heading" id="heading-signin">Welcome back</h1>
           <p class="auth-sub">Sign in to access your Reserc workspace.</p>
+
+          <div class="oauth-row">
+            <a class="oauth-btn" id="oauth-google-signin" href="/api/auth/google">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Google
+            </a>
+            <a class="oauth-btn" id="oauth-github-signin" href="/api/auth/github">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+              </svg>
+              GitHub
+            </a>
+          </div>
+          <div class="oauth-divider"><span>or continue with email</span></div>
+
           <div class="auth-notice" id="notice-signin"></div>
           <form id="form-signin" novalidate>
             <div class="auth-field">
@@ -240,8 +311,28 @@ html, body { height: 100%; font-family: var(--body); background: var(--warm-dark
 
         <!-- SIGN UP -->
         <div class="auth-panel" id="panel-signup">
-          <h1 class="auth-heading">Create account</h1>
+          <h1 class="auth-heading" id="heading-signup">Create account</h1>
           <p class="auth-sub">Start building structured research in minutes.</p>
+
+          <div class="oauth-row">
+            <a class="oauth-btn" id="oauth-google-signup" href="/api/auth/google">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Google
+            </a>
+            <a class="oauth-btn" id="oauth-github-signup" href="/api/auth/github">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+              </svg>
+              GitHub
+            </a>
+          </div>
+          <div class="oauth-divider"><span>or continue with email</span></div>
+
           <div class="auth-notice" id="notice-signup"></div>
           <form id="form-signup" novalidate>
             <div class="auth-field">
@@ -299,6 +390,32 @@ html, body { height: 100%; font-family: var(--body); background: var(--warm-dark
 </div>
 
 <script>
+// ── Split-text animation ────────────────────────────────────────────
+function splitText(el) {
+  if (!el || el.dataset.split) return;
+  el.dataset.split = '1';
+  const text = el.textContent;
+  el.innerHTML = [...text].map((ch, i) =>
+    `<span class="st-char" style="transition-delay:${i * 38}ms">${ch === ' ' ? '&nbsp;' : ch}</span>`
+  ).join('');
+}
+
+function animateHeading(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  splitText(el);
+  // Reset then trigger
+  el.querySelectorAll('.st-char').forEach(s => s.classList.remove('st-in'));
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.querySelectorAll('.st-char').forEach(s => s.classList.add('st-in'));
+  }));
+}
+
+// Animate on load
+window.addEventListener('DOMContentLoaded', () => {
+  animateHeading('heading-signin');
+});
+
 // ── Panel switching ──
 const panels = document.querySelectorAll('.auth-panel');
 const tabs   = document.querySelectorAll('.auth-tab');
@@ -308,6 +425,9 @@ function showPanel(id) {
   tabs.forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + id)?.classList.add('active');
   document.querySelector(`[data-panel="${id}"]`)?.classList.add('active');
+  // Animate heading of newly shown panel
+  if (id === 'signin') animateHeading('heading-signin');
+  if (id === 'signup') animateHeading('heading-signup');
 }
 
 tabs.forEach(t => t.addEventListener('click', () => showPanel(t.dataset.panel)));
@@ -318,6 +438,36 @@ document.getElementById('btn-to-signin').addEventListener('click', () => showPan
 
 const hash = location.hash.replace('#', '');
 if (['signup', 'forgot'].includes(hash)) showPanel(hash);
+
+// ── OAuth: carry ?next= through OAuth flow ──
+(function() {
+  const next = new URLSearchParams(location.search).get('next') || '/';
+  const safeNext = encodeURIComponent(next.startsWith('/') && !next.startsWith('//') ? next : '/');
+  ['oauth-google-signin','oauth-google-signup','oauth-github-signin','oauth-github-signup'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.href = el.href.split('?')[0] + '?next=' + safeNext;
+  });
+})();
+
+// ── OAuth error display ──
+(function() {
+  const err = new URLSearchParams(location.search).get('oauth_error');
+  if (!err) return;
+  const msgs = {
+    google_not_configured: 'Google sign-in is not yet configured.',
+    github_not_configured: 'GitHub sign-in is not yet configured.',
+    state_mismatch: 'Authentication failed — please try again.',
+    token_failed: 'Could not complete sign-in — try again.',
+    no_email: 'Your account has no verified email address.',
+    google_failed: 'Google sign-in failed — please try again.',
+    github_failed: 'GitHub sign-in failed — please try again.',
+  };
+  const notice = document.getElementById('notice-signin');
+  if (notice) {
+    notice.textContent = msgs[err] || 'Sign-in failed — please try again.';
+    notice.className = 'auth-notice show error';
+  }
+})();
 
 // ── Password toggle ──
 document.querySelectorAll('.pw-toggle').forEach(btn => {

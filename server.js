@@ -8,7 +8,7 @@ import { buildLocalReport, loadFrameworks, matchFrameworks } from "./lib/framewo
 import { fetchExploreData } from "./lib/exploreFetch.js";
 import { fetchExploreSummary } from "./lib/exploreSummary.js";
 import { initDb } from "./lib/db.js";
-import { signup, signin, signout, getSession, setCookieHeader, clearCookieHeader } from "./lib/auth.js";
+import { signup, signin, signout, getSession, oauthLogin, setCookieHeader, clearCookieHeader } from "./lib/auth.js";
 import { saveItem, recordHistory, toggleSaved, deleteItem, getLibrary, getHistory, getItem } from "./lib/library.js";
 import { streamChat } from "./lib/chatAgent.js";
 
@@ -59,6 +59,12 @@ function redirect(res, location, cookie) {
   if (cookie) headers["Set-Cookie"] = cookie;
   res.writeHead(302, headers);
   res.end();
+}
+
+function oauthBaseUrl(req) {
+  const proto = req.headers["x-forwarded-proto"] || "https";
+  const host  = req.headers["x-forwarded-host"] || req.headers.host;
+  return `${proto}://${host}`;
 }
 
 function serveStatic(req, res) {
@@ -118,6 +124,153 @@ const server = http.createServer(async (req, res) => {
       if (!session) return sendJson(res, 401, { ok: false });
       return sendJson(res, 200, { ok: true, user: { id: session.user_id, name: session.name, email: session.email } });
     } catch { return sendJson(res, 500, { ok: false }); }
+  }
+
+  // ── OAUTH ─────────────────────────────────────────────────────────
+
+  if (req.method === "GET" && url === "/api/auth/google") {
+    const gId = process.env.GOOGLE_CLIENT_ID;
+    if (!gId) return redirect(res, "/auth.html?oauth_error=google_not_configured");
+    const { randomBytes } = await import("crypto");
+    const state = randomBytes(16).toString("hex");
+    const base  = oauthBaseUrl(req);
+    const next  = new URLSearchParams(req.url.split("?")[1] || "").get("next") || "/";
+    const params = new URLSearchParams({
+      client_id: gId,
+      redirect_uri: `${base}/api/auth/google/callback`,
+      response_type: "code",
+      scope: "openid email profile",
+      state,
+      prompt: "select_account",
+    });
+    const cookieOpts = "HttpOnly; SameSite=Lax; Path=/; Max-Age=600";
+    res.writeHead(302, {
+      Location: `https://accounts.google.com/o/oauth2/v2/auth?${params}`,
+      "Set-Cookie": [
+        `oauth_state=${state}; ${cookieOpts}`,
+        `oauth_next=${encodeURIComponent(next)}; ${cookieOpts}`,
+      ],
+    });
+    return res.end();
+  }
+
+  if (req.method === "GET" && url === "/api/auth/google/callback") {
+    try {
+      const qs     = new URLSearchParams(req.url.split("?")[1] || "");
+      const code   = qs.get("code");
+      const state  = qs.get("state");
+      const cookies = Object.fromEntries(
+        (req.headers.cookie || "").split(";").map(p => { const [k,...v]=p.trim().split("="); return [k,v.join("=")]; })
+      );
+      if (!code || !state || state !== cookies.oauth_state)
+        return redirect(res, "/auth.html?oauth_error=state_mismatch");
+
+      const base = oauthBaseUrl(req);
+      const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          code, grant_type: "authorization_code",
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: `${base}/api/auth/google/callback`,
+        }),
+      });
+      const tokenData = await tokenRes.json();
+      if (!tokenData.access_token) return redirect(res, "/auth.html?oauth_error=token_failed");
+
+      const userRes  = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` },
+      });
+      const gUser    = await userRes.json();
+      if (!gUser.email) return redirect(res, "/auth.html?oauth_error=no_email");
+
+      const result = await oauthLogin(gUser.name, gUser.email, "google", gUser.id);
+      const next = decodeURIComponent(cookies.oauth_next || "/");
+      const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/";
+      res.writeHead(302, {
+        Location: safeNext,
+        "Set-Cookie": [setCookieHeader(result.sessionId), "oauth_state=; Max-Age=0; Path=/", "oauth_next=; Max-Age=0; Path=/"],
+      });
+      return res.end();
+    } catch (err) {
+      console.error("Google OAuth error:", err.message);
+      return redirect(res, "/auth.html?oauth_error=google_failed");
+    }
+  }
+
+  if (req.method === "GET" && url === "/api/auth/github") {
+    const ghId = process.env.GITHUB_CLIENT_ID;
+    if (!ghId) return redirect(res, "/auth.html?oauth_error=github_not_configured");
+    const { randomBytes } = await import("crypto");
+    const state = randomBytes(16).toString("hex");
+    const base  = oauthBaseUrl(req);
+    const next  = new URLSearchParams(req.url.split("?")[1] || "").get("next") || "/";
+    const params = new URLSearchParams({
+      client_id: ghId,
+      redirect_uri: `${base}/api/auth/github/callback`,
+      scope: "user:email",
+      state,
+    });
+    const cookieOpts = "HttpOnly; SameSite=Lax; Path=/; Max-Age=600";
+    res.writeHead(302, {
+      Location: `https://github.com/login/oauth/authorize?${params}`,
+      "Set-Cookie": [
+        `oauth_state=${state}; ${cookieOpts}`,
+        `oauth_next=${encodeURIComponent(next)}; ${cookieOpts}`,
+      ],
+    });
+    return res.end();
+  }
+
+  if (req.method === "GET" && url === "/api/auth/github/callback") {
+    try {
+      const qs    = new URLSearchParams(req.url.split("?")[1] || "");
+      const code  = qs.get("code");
+      const state = qs.get("state");
+      const cookies = Object.fromEntries(
+        (req.headers.cookie || "").split(";").map(p => { const [k,...v]=p.trim().split("="); return [k,v.join("=")]; })
+      );
+      if (!code || !state || state !== cookies.oauth_state)
+        return redirect(res, "/auth.html?oauth_error=state_mismatch");
+
+      const base = oauthBaseUrl(req);
+      const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
+        method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
+        body: new URLSearchParams({
+          code,
+          client_id: process.env.GITHUB_CLIENT_ID,
+          client_secret: process.env.GITHUB_CLIENT_SECRET,
+          redirect_uri: `${base}/api/auth/github/callback`,
+        }),
+      });
+      const tokenData = await tokenRes.json();
+      if (!tokenData.access_token) return redirect(res, "/auth.html?oauth_error=token_failed");
+
+      const headers  = { Authorization: `Bearer ${tokenData.access_token}`, "User-Agent": "Reserc-App" };
+      const userRes  = await fetch("https://api.github.com/user", { headers });
+      const ghUser   = await userRes.json();
+
+      let email = ghUser.email;
+      if (!email) {
+        const emailsRes = await fetch("https://api.github.com/user/emails", { headers });
+        const emails    = await emailsRes.json();
+        const primary   = emails.find(e => e.primary && e.verified);
+        email = primary?.email || emails[0]?.email;
+      }
+      if (!email) return redirect(res, "/auth.html?oauth_error=no_email");
+
+      const result = await oauthLogin(ghUser.name || ghUser.login, email, "github", ghUser.id);
+      const next = decodeURIComponent(cookies.oauth_next || "/");
+      const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/";
+      res.writeHead(302, {
+        Location: safeNext,
+        "Set-Cookie": [setCookieHeader(result.sessionId), "oauth_state=; Max-Age=0; Path=/", "oauth_next=; Max-Age=0; Path=/"],
+      });
+      return res.end();
+    } catch (err) {
+      console.error("GitHub OAuth error:", err.message);
+      return redirect(res, "/auth.html?oauth_error=github_failed");
+    }
   }
 
   // ── PROTECTED PAGE GUARD ──────────────────────────────────────────

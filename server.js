@@ -62,6 +62,7 @@ function redirect(res, location, cookie) {
 }
 
 function oauthBaseUrl(req) {
+  if (process.env.BASE_URL) return process.env.BASE_URL.replace(/\/$/, "");
   const proto = req.headers["x-forwarded-proto"] || "https";
   const host  = req.headers["x-forwarded-host"] || req.headers.host;
   return `${proto}://${host}`;

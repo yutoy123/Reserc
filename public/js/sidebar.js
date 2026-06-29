@@ -131,4 +131,13 @@
     window.location.href = '/auth.html';
   };
 
+  // ── Reveal fallback: force all .reveal elements visible after 3s ───────
+  // Ensures IntersectionObserver failures (e.g. grid reflow edge cases) don't
+  // leave content permanently invisible.
+  setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+      el.classList.add('visible');
+    });
+  }, 3000);
+
 })();

@@ -87,11 +87,34 @@ function injectActionBar(topic, region, reportData) {
   });
 }
 
+// ── Skeleton HTML for investigate loading ──────────────────────────
+function skeletonReport() {
+  const sectionSkel = (lines = 3) => `
+    <div class="sk-section-block">
+      <div class="sk-block sk-section-heading"></div>
+      ${Array.from({ length: lines }, (_, i) =>
+        `<div class="sk-block sk-line${i === lines - 1 ? ' w60' : i % 2 === 1 ? ' w80' : ''}"></div>`
+      ).join('')}
+    </div>`;
+  return `
+    <div class="sk-report">
+      <div class="sk-block sk-report-title"></div>
+      <div class="sk-metrics">
+        ${Array.from({ length: 5 }, () => '<div class="sk-block sk-metric"></div>').join('')}
+      </div>
+      ${sectionSkel(3)}
+      ${sectionSkel(4)}
+      ${sectionSkel(3)}
+      ${sectionSkel(2)}
+    </div>`;
+}
+
 // ── Main search ────────────────────────────────────────────────────
 async function runSearch(topic, region) {
-  setLoading(statusBar, searchBtn, true, "Fetching World Bank data and synthesizing report…");
+  if (searchBtn) searchBtn.disabled = true;
+  if (statusBar) { statusBar.className = "status-bar"; statusBar.textContent = ""; }
   reportEl.classList.remove("visible");
-  reportEl.innerHTML = "";
+  reportEl.innerHTML = skeletonReport();
   document.getElementById("reportActionBar")?.remove();
 
   try {
@@ -115,10 +138,10 @@ async function runSearch(topic, region) {
     reportEl.scrollIntoView({ behavior: "smooth", block: "start" });
     injectActionBar(topic, region, json);
   } catch {
-    statusBar.className = "status-bar error";
-    statusBar.textContent = "Network error. Is the server running?";
+    reportEl.innerHTML = "";
+    if (statusBar) { statusBar.className = "status-bar error"; statusBar.textContent = "Network error. Is the server running?"; }
   } finally {
-    setLoading(statusBar, searchBtn, false);
+    if (searchBtn) searchBtn.disabled = false;
   }
 }
 

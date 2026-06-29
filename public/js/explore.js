@@ -114,13 +114,27 @@ export function initExplore() {
   const toInvestigate = document.getElementById("toInvestigate");
   const toBuild = document.getElementById("toBuild");
 
+  function skeletonExplore() {
+    return `
+      <div class="sk-explore">
+        <div class="sk-block sk-explore-title"></div>
+        <div class="sk-stat-row">
+          ${Array.from({ length: 4 }, () => '<div class="sk-block sk-stat"></div>').join('')}
+        </div>
+        <div class="sk-block sk-chart-label"></div>
+        <div class="sk-block sk-chart-block"></div>
+        <div class="sk-block sk-chart-label" style="margin-top:20px"></div>
+        <div class="sk-block sk-chart-block"></div>
+      </div>`;
+  }
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const interest = document.getElementById("interest").value.trim();
     const region = document.getElementById("exploreRegion").value;
-    setLoading(statusBar, null, true, "Fetching World Bank data for LIC/LMC countries…");
-    output.style.display = "none";
-    output.innerHTML = "";
+    if (statusBar) { statusBar.className = "status-bar"; statusBar.textContent = ""; }
+    output.innerHTML = skeletonExplore();
+    output.style.display = "block";
 
     try {
       const res = await fetch("/api/explore", {
@@ -144,11 +158,10 @@ export function initExplore() {
       toInvestigate.href = `/investigate.html${q}`;
       toBuild.href = `/build.html?topic=${encodeURIComponent(interest)}&region=${encodeURIComponent(region)}`;
     } catch (err) {
-      statusBar.className = "status-bar error";
-      statusBar.textContent = "Could not load data.";
+      output.innerHTML = "";
+      output.style.display = "none";
+      if (statusBar) { statusBar.className = "status-bar error"; statusBar.textContent = "Could not load data."; }
       console.error("[Explore] Error:", err);
-    } finally {
-      setLoading(statusBar, null, false);
     }
   });
 }

@@ -1,143 +1,243 @@
-/* Reserc Sidebar — injected into every protected page */
+/* Reserc — StaggeredMenu (vanilla JS + GSAP, injected on every protected page) */
 (function () {
-  // Don't show sidebar on auth page
   if (window.location.pathname.includes('auth') || window.location.pathname.includes('login')) return;
 
-  // ── Icons ─────────────────────────────────────────────────────────────
+  // ── Icons ──────────────────────────────────────────────────────────────────
   const icons = {
-    home: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M7 18V12h6v6"/></svg>`,
-    explore: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M13 7l-1.5 5.5L6 14l1.5-5.5L13 7z"/></svg>`,
+    home:        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M7 18V12h6v6"/></svg>`,
+    explore:     `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M13 7l-1.5 5.5L6 14l1.5-5.5L13 7z"/></svg>`,
     investigate: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M17 17l-3.5-3.5"/></svg>`,
-    build: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="13" width="14" height="3.5"/><rect x="5" y="9" width="10" height="3.5"/><rect x="7" y="5" width="6" height="3.5"/></svg>`,
-    frameworks: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5.5" height="5.5"/><rect x="11.5" y="3" width="5.5" height="5.5"/><rect x="3" y="11.5" width="5.5" height="5.5"/><rect x="11.5" y="11.5" width="5.5" height="5.5"/></svg>`,
-    chat: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h14a1 1 0 011 1v8a1 1 0 01-1 1H6.5L3 17V5a1 1 0 011-1z"/><path d="M7 9h6M7 12h4"/></svg>`,
-    library: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v12M8 4v12"/><path d="M12 4l3.5 12"/><path d="M16 4l-3.5 12"/></svg>`,
-    compare: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="6" height="12"/><rect x="11" y="4" width="6" height="12"/></svg>`,
-    settings: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="2.5"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M4.7 15.3l1.4-1.4M13.9 6.1l1.4-1.4"/></svg>`,
-    signout: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 6.5L16 10l-3.5 3.5M16 10H7"/><path d="M9 4H5a1 1 0 00-1 1v10a1 1 0 001 1h4"/></svg>`,
-    collapse: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15l-5-5 5-5"/></svg>`,
-    menu: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h14M3 10h14M3 14h14"/></svg>`,
+    build:       `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="13" width="14" height="3.5"/><rect x="5" y="9" width="10" height="3.5"/><rect x="7" y="5" width="6" height="3.5"/></svg>`,
+    frameworks:  `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5.5" height="5.5"/><rect x="11.5" y="3" width="5.5" height="5.5"/><rect x="3" y="11.5" width="5.5" height="5.5"/><rect x="11.5" y="11.5" width="5.5" height="5.5"/></svg>`,
+    chat:        `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h14a1 1 0 011 1v8a1 1 0 01-1 1H6.5L3 17V5a1 1 0 011-1z"/></svg>`,
+    library:     `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v12M8 4v12"/><path d="M12 4l3.5 12M16 4l-3.5 12"/></svg>`,
+    compare:     `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="6" height="12"/><rect x="11" y="4" width="6" height="12"/></svg>`,
+    signout:     `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 6.5L16 10l-3.5 3.5M16 10H7"/><path d="M9 4H5a1 1 0 00-1 1v10a1 1 0 001 1h4"/></svg>`,
   };
 
-  // ── Active page detection ──────────────────────────────────────────────
+  // ── Nav data ───────────────────────────────────────────────────────────────
   const path = window.location.pathname;
   function isActive(href) {
     if (href === '/') return path === '/' || path === '/index.html';
     return path.includes(href.replace('.html', ''));
   }
 
-  // ── Build nav item ─────────────────────────────────────────────────────
-  function navItem({ label, href, icon, badge, extraClass = '' }) {
-    const active = isActive(href) ? ' active' : '';
-    const badgeHtml = badge ? `<span class="sb-item-badge">${badge}</span>` : '';
-    return `
-      <a href="${href}" class="sb-item${active}${extraClass ? ' ' + extraClass : ''}" data-tooltip="${label}">
-        <span class="sb-item-icon">${icons[icon]}</span>
-        <span class="sb-item-label">${label}</span>
-        ${badgeHtml}
-      </a>`;
+  const navSections = [
+    {
+      label: 'Research',
+      items: [
+        { label: 'Home',        href: '/',                 icon: 'home'        },
+        { label: 'Explore',     href: '/explore.html',     icon: 'explore'     },
+        { label: 'Investigate', href: '/investigate.html', icon: 'investigate' },
+        { label: 'Build',       href: '/build.html',       icon: 'build'       },
+        { label: 'Frameworks',  href: '/frameworks.html',  icon: 'frameworks'  },
+      ],
+    },
+    {
+      label: 'Tools',
+      items: [
+        { label: 'Ask AI',  href: '/chat.html',    icon: 'chat',    badge: 'AI' },
+        { label: 'Library', href: '/library.html', icon: 'library'              },
+        { label: 'Compare', href: '/compare.html', icon: 'compare'              },
+      ],
+    },
+  ];
+
+  // ── Build HTML ─────────────────────────────────────────────────────────────
+  function buildNavItems(items) {
+    return items.map((item, i) => {
+      const active = isActive(item.href) ? ' sm-active' : '';
+      const badgeHtml = item.badge ? `<span class="sm-item-badge">${item.badge}</span>` : '';
+      const num = String(i + 1).padStart(2, '0');
+      return `
+        <li class="sm-nav-li">
+          <a href="${item.href}" class="sm-nav-item${active}">
+            <span class="sm-item-num">${num}</span>
+            <span class="sm-item-label-wrap">
+              <span class="sm-item-label">${item.label}</span>
+              ${badgeHtml}
+            </span>
+            <span class="sm-item-icon">${icons[item.icon]}</span>
+          </a>
+        </li>`;
+    }).join('');
   }
 
-  // ── Sidebar HTML ───────────────────────────────────────────────────────
-  const sidebarHtml = `
-    <div class="sb-logo-wrap">
-      <a href="/" class="sb-logo">
-        <span class="sb-logo-mark">R</span>
-        <span class="sb-logo-text">
-          <span class="sb-logo-name">Reserc</span>
-          <span class="sb-logo-sub">LMIC economics</span>
-        </span>
-      </a>
+  const sectionsHtml = navSections.map(sec => `
+    <div class="sm-nav-section">
+      <div class="sm-section-label">${sec.label}</div>
+      <ul class="sm-nav-list">${buildNavItems(sec.items)}</ul>
+    </div>`).join('');
+
+  const html = `
+    <!-- Prelayers -->
+    <div class="sm-prelayer" id="smPre1"></div>
+    <div class="sm-prelayer" id="smPre2"></div>
+
+    <!-- Panel -->
+    <div class="sm-panel" id="smPanel" role="dialog" aria-modal="true" aria-label="Navigation">
+      <div class="sm-panel-inner">
+        <div class="sm-panel-head">
+          <a href="/" class="sm-panel-logo">
+            <span class="sm-panel-logo-mark">R</span>
+            <span class="sm-panel-logo-text">Reserc</span>
+          </a>
+          <button class="sm-panel-close" id="smClose" aria-label="Close menu">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>
+          </button>
+        </div>
+
+        <nav class="sm-nav">${sectionsHtml}</nav>
+
+        <div class="sm-panel-footer">
+          <button class="sm-signout-btn" onclick="logout()">
+            <span class="sm-signout-icon">${icons.signout}</span>
+            <span>Sign out</span>
+          </button>
+          <p class="sm-footer-tagline">LMIC economics research</p>
+        </div>
+      </div>
     </div>
 
-    <nav class="sb-nav">
-      <div class="sb-section-label">Research</div>
-      ${navItem({ label: 'Home',        href: '/',                 icon: 'home'        })}
-      ${navItem({ label: 'Explore',     href: '/explore.html',     icon: 'explore'     })}
-      ${navItem({ label: 'Investigate', href: '/investigate.html', icon: 'investigate' })}
-      ${navItem({ label: 'Build',       href: '/build.html',       icon: 'build'       })}
-      ${navItem({ label: 'Frameworks',  href: '/frameworks.html',  icon: 'frameworks'  })}
-
-      <div class="sb-divider"></div>
-      <div class="sb-section-label">Tools</div>
-      ${navItem({ label: 'Ask AI',  href: '/chat.html',    icon: 'chat',    badge: 'AI',  extraClass: 'ai-item' })}
-      ${navItem({ label: 'Library', href: '/library.html', icon: 'library' })}
-      ${navItem({ label: 'Compare', href: '/compare.html', icon: 'compare' })}
-    </nav>
-
-    <div class="sb-bottom">
-      <div class="sb-divider" style="margin:0 16px 8px"></div>
-      <button class="sb-item" onclick="logout()" data-tooltip="Sign out" style="cursor:pointer">
-        <span class="sb-item-icon">${icons.signout}</span>
-        <span class="sb-item-label">Sign out</span>
-      </button>
-      <button class="sb-collapse-btn" id="sbCollapseBtn" data-tooltip="Expand">
-        <span class="sb-collapse-icon">${icons.collapse}</span>
-        <span class="sb-collapse-label">Collapse menu</span>
-      </button>
-    </div>
-  `;
-
-  // ── Mobile hamburger ───────────────────────────────────────────────────
-  const hamburgerHtml = `
-    <button class="sb-hamburger" id="sbHamburger" aria-label="Open menu">
-      ${icons.menu}
+    <!-- Toggle button -->
+    <button class="sm-toggle-btn" id="smToggle" aria-label="Open menu" aria-expanded="false" aria-controls="smPanel">
+      <span class="sm-toggle-bars" id="smBars">
+        <span class="sm-bar sm-bar-1"></span>
+        <span class="sm-bar sm-bar-2"></span>
+        <span class="sm-bar sm-bar-3"></span>
+      </span>
     </button>
-    <div class="sb-overlay" id="sbOverlay"></div>
+
+    <!-- Overlay -->
+    <div class="sm-overlay" id="smOverlay"></div>
   `;
 
-  // ── Inject sidebar ─────────────────────────────────────────────────────
-  const sidebar = document.createElement('aside');
-  sidebar.className = 'sb-sidebar';
-  sidebar.innerHTML = sidebarHtml;
-  document.body.insertBefore(sidebar, document.body.firstChild);
+  const wrapper = document.createElement('div');
+  wrapper.id = 'smWrapper';
+  wrapper.innerHTML = html;
+  document.body.appendChild(wrapper);
+  document.body.classList.add('sm-layout');
 
-  // Inject mobile elements
-  document.body.insertAdjacentHTML('beforeend', hamburgerHtml);
+  // ── Load GSAP then init ────────────────────────────────────────────────────
+  function loadGSAP(cb) {
+    if (window.gsap) { cb(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+    s.onload = cb;
+    document.head.appendChild(s);
+  }
 
-  // Apply layout class
-  document.body.classList.add('sb-layout');
+  loadGSAP(function () {
+    const panel   = document.getElementById('smPanel');
+    const pre1    = document.getElementById('smPre1');
+    const pre2    = document.getElementById('smPre2');
+    const toggle  = document.getElementById('smToggle');
+    const closeBtn= document.getElementById('smClose');
+    const overlay = document.getElementById('smOverlay');
+    const bars    = document.getElementById('smBars');
+    const allItems= panel.querySelectorAll('.sm-item-label');
 
-  // ── Collapse state (persist in localStorage) ───────────────────────────
-  const STORAGE_KEY = 'reserc_sb_collapsed';
-  let isCollapsed = localStorage.getItem(STORAGE_KEY) === 'true';
-  if (isCollapsed) document.body.classList.add('sb-collapsed');
+    let isOpen   = false;
+    let busy     = false;
+    let openTl   = null;
+    let closeTw  = null;
 
-  document.getElementById('sbCollapseBtn').addEventListener('click', () => {
-    isCollapsed = !isCollapsed;
-    document.body.classList.toggle('sb-collapsed', isCollapsed);
-    localStorage.setItem(STORAGE_KEY, isCollapsed);
+    // Initial positions — all offscreen left
+    gsap.set([pre1, pre2, panel], { xPercent: -100, opacity: 1 });
+    gsap.set(allItems, { yPercent: 120, rotate: 8, opacity: 0 });
+
+    function playOpen() {
+      if (busy) return;
+      busy = true;
+      if (closeTw) { closeTw.kill(); closeTw = null; }
+      if (openTl)  { openTl.kill(); }
+
+      gsap.set(allItems, { yPercent: 120, rotate: 8, opacity: 0 });
+
+      const tl = gsap.timeline({
+        onComplete: () => { busy = false; }
+      });
+
+      // Pre-layers sweep in staggered
+      tl.fromTo(pre1, { xPercent: -100 }, { xPercent: 0, duration: 0.45, ease: 'power4.out' }, 0);
+      tl.fromTo(pre2, { xPercent: -100 }, { xPercent: 0, duration: 0.48, ease: 'power4.out' }, 0.06);
+      // Panel sweeps in
+      tl.fromTo(panel, { xPercent: -100 }, { xPercent: 0, duration: 0.6, ease: 'power4.out' }, 0.12);
+      // Nav items stagger up
+      tl.to(allItems, {
+        yPercent: 0, rotate: 0, opacity: 1,
+        duration: 0.7, ease: 'power4.out',
+        stagger: { each: 0.07, from: 'start' }
+      }, 0.32);
+
+      openTl = tl;
+
+      // Animate toggle bars → X
+      gsap.to('.sm-bar-1', { y: 5, rotate: 45, duration: 0.3, ease: 'power3.inOut' });
+      gsap.to('.sm-bar-2', { opacity: 0, duration: 0.2 });
+      gsap.to('.sm-bar-3', { y: -5, rotate: -45, duration: 0.3, ease: 'power3.inOut' });
+
+      // Show overlay
+      gsap.to(overlay, { opacity: 1, duration: 0.3, display: 'block' });
+
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function playClose() {
+      if (openTl) { openTl.kill(); openTl = null; }
+
+      const all = [pre1, pre2, panel];
+      if (closeTw) closeTw.kill();
+      closeTw = gsap.to(all, {
+        xPercent: -100, duration: 0.3, ease: 'power3.in', overwrite: 'auto',
+        onComplete: () => { busy = false; }
+      });
+
+      // Bars back to hamburger
+      gsap.to('.sm-bar-1', { y: 0, rotate: 0, duration: 0.28, ease: 'power3.inOut' });
+      gsap.to('.sm-bar-2', { opacity: 1, duration: 0.2, delay: 0.08 });
+      gsap.to('.sm-bar-3', { y: 0, rotate: 0, duration: 0.28, ease: 'power3.inOut' });
+
+      // Hide overlay
+      gsap.to(overlay, { opacity: 0, duration: 0.25, onComplete: () => { overlay.style.display = 'none'; } });
+
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggle_menu() {
+      isOpen = !isOpen;
+      if (isOpen) playOpen();
+      else        playClose();
+    }
+
+    function close() {
+      if (!isOpen) return;
+      isOpen = false;
+      playClose();
+    }
+
+    toggle.addEventListener('click', toggle_menu);
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', close);
+
+    // Close when a nav link is clicked
+    panel.querySelectorAll('.sm-nav-item').forEach(link => {
+      link.addEventListener('click', close);
+    });
+
+    // Keyboard: Escape closes
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   });
 
-  // ── Mobile toggle ──────────────────────────────────────────────────────
-  const hamburger = document.getElementById('sbHamburger');
-  const overlay   = document.getElementById('sbOverlay');
-
-  hamburger.addEventListener('click', () => {
-    document.body.classList.add('sb-mobile-open');
-  });
-  overlay.addEventListener('click', () => {
-    document.body.classList.remove('sb-mobile-open');
-  });
-
-  // Close mobile nav on nav item click
-  sidebar.querySelectorAll('.sb-item[href]').forEach(link => {
-    link.addEventListener('click', () => document.body.classList.remove('sb-mobile-open'));
-  });
-
-  // ── Global logout ──────────────────────────────────────────────────────
+  // ── Global logout ──────────────────────────────────────────────────────────
   window.logout = async function () {
     try { await fetch('/api/auth/signout', { method: 'POST' }); } catch {}
     window.location.href = '/auth.html';
   };
 
-  // ── Reveal fallback: force all .reveal elements visible after 3s ───────
-  // Ensures IntersectionObserver failures (e.g. grid reflow edge cases) don't
-  // leave content permanently invisible.
+  // ── Reveal fallback ────────────────────────────────────────────────────────
   setTimeout(() => {
-    document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
-      el.classList.add('visible');
-    });
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
   }, 3000);
 
 })();

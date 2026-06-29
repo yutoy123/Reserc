@@ -121,6 +121,7 @@
   display: none;
 }
 </style>
+<link rel="stylesheet" href="/css/sidebar.css">
 </head>
 <body data-page="compare">
 
@@ -362,5 +363,6 @@ saveBtn.addEventListener('click', async () => {
 // Pre-fill from URL and auto-run
 if (params.get('a') && params.get('b')) form.dispatchEvent(new Event('submit'));
 </script>
+<script src="/js/sidebar.js"></script>
 </body>
 </html>

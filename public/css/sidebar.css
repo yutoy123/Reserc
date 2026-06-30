@@ -97,7 +97,8 @@ body.sm-layout {
 .sm-panel-head {
   display: flex;
   align-items: center;
-  padding: 16px 28px 16px 86px;
+  justify-content: flex-end;
+  padding: 16px 28px;
   border-bottom: 1px solid rgba(184,122,26,.15);
   flex-shrink: 0;
   min-height: 70px;

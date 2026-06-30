@@ -60,6 +60,7 @@ body.sm-layout {
   width: 380px;
   z-index: 810;
   pointer-events: none;
+  transform: translateX(-100%);
 }
 #smPre1 { background: rgba(139,58,26,.45); }
 
@@ -76,6 +77,7 @@ body.sm-layout {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transform: translateX(-100%);
 }
 @media (max-width: 480px) {
   .sm-panel,

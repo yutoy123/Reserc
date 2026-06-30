@@ -164,9 +164,9 @@
       openTl = tl;
 
       // Animate toggle bars → X
-      gsap.to('.sm-bar-1', { y: 5, rotate: 45, duration: 0.3, ease: 'power3.inOut' });
+      gsap.to('.sm-bar-1', { y: 6.5, rotate: 45, duration: 0.3, ease: 'power3.inOut' });
       gsap.to('.sm-bar-2', { opacity: 0, duration: 0.2 });
-      gsap.to('.sm-bar-3', { y: -5, rotate: -45, duration: 0.3, ease: 'power3.inOut' });
+      gsap.to('.sm-bar-3', { y: -6.5, rotate: -45, duration: 0.3, ease: 'power3.inOut' });
 
       // Show overlay
       gsap.to(overlay, { opacity: 1, duration: 0.3, display: 'block' });

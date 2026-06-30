@@ -77,7 +77,6 @@ body.sm-layout {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transform: translateX(-100%);
 }
 @media (max-width: 480px) {
   .sm-panel,

@@ -1,1 +1,7 @@
 .env
+client_secret*.json
+*.env
+.env
+.env.local
+node_modules/
+

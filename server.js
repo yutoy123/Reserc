@@ -177,7 +177,10 @@ const server = http.createServer(async (req, res) => {
         }),
       });
       const tokenData = await tokenRes.json();
-      if (!tokenData.access_token) return redirect(res, "/auth.html?oauth_error=token_failed");
+      if (!tokenData.access_token) {
+        console.error("GOOGLE TOKEN EXCHANGE FAILED:", JSON.stringify(tokenData));
+        return redirect(res, "/auth.html?oauth_error=token_failed");
+      }
 
       const userRes  = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
         headers: { Authorization: `Bearer ${tokenData.access_token}` },
